@@ -1,24 +1,95 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
+import 'package:onlineexamplatform/src/registration/registrationpage.dart';
 
-
-class LoginScreen extends StatelessWidget {
+const users = const {
+  '01819648302': '12345',
+  'hunter@gmail.com': 'hunter',
+};
+class LoginScreen extends StatefulWidget {
   @override
+  LoginScreenForm createState() => LoginScreenForm();
+}
 
+class LoginScreenForm extends State<LoginScreen> {
+
+  String password="",mobile="";
+  int x=-1;
+  @override
+  Future signup(context){
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) => Scaffold(),
+
+          //RegisterForm(),
+    ));
+  }
+  Future login(context){
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) => Scaffold(),
+    ));
+  }
+  Duration get loginTime => Duration(milliseconds: 2250);
+  Future<String> _signup(LoginData data) {
+    setState(() {
+  mobile=data.name;
+  password=data.password;
+  x=0;
+  });
+  print('Name: ${data.name}, Password: ${data.password}');
+  return Future.delayed(loginTime).then((_) {
+//      if (!users.containsKey(data.name)) {
+//        return 'Username not exists';
+//      }
+//      if (users[data.name] != data.password) {
+//        return 'Password does not match';
+//      }
+  return null;
+  });
+}
+  Future<String> _login(LoginData data) {
+    setState(() {
+      mobile=data.name;
+      password=data.password;
+      x=1;
+    });
+    print('Name: ${data.name}, Password: ${data.password}');
+    return Future.delayed(loginTime).then((_) {
+      if (!users.containsKey(data.name)) {
+        return 'Username not exists';
+      }
+      if (users[data.name] != data.password) {
+        return 'Password does not match';
+      }
+      return null;
+    });
+  }
+  String emailValidator(String value){
+    if(value.length<8){
+      return "Invalid mobile number";
+    }
+  }
   Widget build(BuildContext context) {
     final inputBorder = BorderRadius.vertical(
       bottom: Radius.circular(10.0),
       top: Radius.circular(20.0),
     );
+
     return FlutterLogin(
       title: 'Quiz Master',
       //logo: 'images/logo.jpg',
-      onLogin: (_) => Future(null),
-      onSignup: (_) => Future(null),
+      onLogin: _login,
+      onSignup: _signup,
+      emailValidator: emailValidator,
       onSubmitAnimationCompleted: () {
+        if(x==0){
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => Scaffold(),
-        ));
+          builder: (context) => RegisterForm(mobile,password),
+        ));}
+        if(x==1){
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) => Scaffold(),
+          ));
+        }
       },
       onRecoverPassword: (_) => Future(null),
       messages: LoginMessages(
