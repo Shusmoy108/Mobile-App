@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
+import 'package:onlineexamplatform/src/home/studenthome.dart';
+import 'package:onlineexamplatform/src/home/teacherhome.dart';
 import 'package:onlineexamplatform/src/registration/registrationpage.dart';
 
 const users = const {
@@ -55,7 +57,7 @@ class LoginScreenForm extends State<LoginScreen> {
     print('Name: ${data.name}, Password: ${data.password}');
     return Future.delayed(loginTime).then((_) {
       if (!users.containsKey(data.name)) {
-        return 'Username not exists';
+        return 'Mobile number does not exists';
       }
       if (users[data.name] != data.password) {
         return 'Password does not match';
@@ -87,7 +89,7 @@ class LoginScreenForm extends State<LoginScreen> {
         ));}
         if(x==1){
           Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => Scaffold(),
+            builder: (context) => StudentHome(mobile),
           ));
         }
       },
