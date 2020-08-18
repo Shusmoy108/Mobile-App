@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/services.dart';
 class RegisterForm extends StatefulWidget {
   String mobile,pass;
   RegisterForm(this.mobile,this.pass);
@@ -10,10 +11,53 @@ class RegisterForm extends StatefulWidget {
 
 class _RegisterFormState extends State<RegisterForm> {
   String mobile,pass;
+  String _nid_fileName = '...';
+  String _institutiional_id_fileName = '...';
+  String _nid_path = '...';
+  String _institutiional_id_path = '...';
+  String _extension;
+  bool _hasValidMime = false;
+  FileType _nid_pickingType=FileType.any;
+  FileType _institutiional_id_pickingType=FileType.any;
   _RegisterFormState(this.mobile,this.pass);
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _agreedToTOS = true;
+  bool role= true;
+  bool teacher=false;
+  void _openNID() async {
+    if (_nid_pickingType == FileType.any || _hasValidMime) {
+      try {
+        _nid_path = await FilePicker.getFilePath(type: _nid_pickingType);
+      } on PlatformException catch (e) {
+        print("Unsupported operation" + e.toString());
+      }
 
+      if (!mounted) return;
+
+      setState(() {
+        _nid_fileName = _nid_path != null ? _nid_path.split('/').last : '...';
+
+      });
+    }
+
+  }
+  void _openInstitutionalID() async {
+    if (_institutiional_id_pickingType == FileType.any || _hasValidMime) {
+      try {
+        _institutiional_id_path = await FilePicker.getFilePath(type: _institutiional_id_pickingType);
+      } on PlatformException catch (e) {
+        print("Unsupported operation" + e.toString());
+      }
+
+      if (!mounted) return;
+
+      setState(() {
+        _institutiional_id_fileName = _institutiional_id_path != null ? _institutiional_id_path.split('/').last : '...';
+
+      });
+    }
+
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,8 +67,8 @@ class _RegisterFormState extends State<RegisterForm> {
         title: Text("Quiz Master")),
         body:Form(
       key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: ListView(
+        //crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           TextFormField(
             decoration: const InputDecoration(
@@ -67,6 +111,72 @@ class _RegisterFormState extends State<RegisterForm> {
             enabled: false,
 
           ),
+          const SizedBox(height: 16.0),
+          Row(
+            children: <Widget>[
+              Text("Role"),
+              Checkbox(
+                value: role,
+                onChanged: _setRole,
+              ),
+              GestureDetector(
+                onTap: () => _setRole(!role),
+                child: const Text(
+                  'Student',
+                ),
+              ),
+              Checkbox(
+                value: teacher,
+                onChanged: _setTeacher,
+              ),
+              GestureDetector(
+                onTap: () => _setTeacher(!teacher),
+                child: const Text(
+                  'Teacher',
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16.0),
+          Text("You have to upload the image of your NID/BirthCertificate"),
+          Center(child:
+          new RaisedButton(
+
+            onPressed: () => _openNID(),
+            child: new Text("Choose NID/Birth Certificate"),
+          ),),
+
+          new Text(
+            'URI PATH ',
+            textAlign: TextAlign.center,
+            style: new TextStyle(fontWeight: FontWeight.bold),
+          ),
+          new Text(
+          _nid_path ?? '...',
+            textAlign: TextAlign.center,
+            softWrap: true,
+            textScaleFactor: 0.85,
+          ),
+          const SizedBox(height: 16.0),
+          Text("You have to upload the image of your Institutional ID Card"),
+          Center(child:
+          new RaisedButton(
+            onPressed: () => _openInstitutionalID(),
+            child: new Text("Choose Institutional ID"),
+          ),),
+
+          new Text(
+            'URI PATH ',
+            textAlign: TextAlign.center,
+            style: new TextStyle(fontWeight: FontWeight.bold),
+          ),
+          new Text(
+            _institutiional_id_path ?? '...',
+            textAlign: TextAlign.center,
+            softWrap: true,
+            textScaleFactor: 0.85,
+          ),
+          const SizedBox(height: 16.0),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: Row(
@@ -107,7 +217,18 @@ class _RegisterFormState extends State<RegisterForm> {
     _formKey.currentState.validate();
     print('Form submitted');
   }
-
+  void _setRole(bool newValue) {
+    setState(() {
+      role = newValue;
+      teacher= !newValue;
+    });
+  }
+  void _setTeacher(bool newValue) {
+    setState(() {
+      role = !newValue;
+      teacher= newValue;
+    });
+  }
   void _setAgreedToTOS(bool newValue) {
     setState(() {
       _agreedToTOS = newValue;
