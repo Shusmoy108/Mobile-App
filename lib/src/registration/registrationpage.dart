@@ -65,7 +65,10 @@ class _RegisterFormState extends State<RegisterForm> {
         centerTitle: true,
         backgroundColor: Colors.teal,
         title: Text("Quiz Master")),
-        body:Form(
+        body:Padding(
+            padding: EdgeInsets.all(10),
+            child:Form(
+
       key: _formKey,
       child: ListView(
         //crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,45 +141,55 @@ class _RegisterFormState extends State<RegisterForm> {
             ],
           ),
           const SizedBox(height: 16.0),
-          Text("You have to upload the image of your NID/BirthCertificate"),
-          Center(child:
-          new RaisedButton(
+          Visibility(
+            child: Container(
+              child: Column(
+                children: <Widget>[
+                  Text("You have to upload the image of your NID/BirthCertificate"),
+                  Center(child:
+                  new RaisedButton(
 
-            onPressed: () => _openNID(),
-            child: new Text("Choose NID/Birth Certificate"),
-          ),),
+                    onPressed: () => _openNID(),
+                    child: new Text("Choose NID/Birth Certificate"),
+                  ),),
 
-          new Text(
-            'URI PATH ',
-            textAlign: TextAlign.center,
-            style: new TextStyle(fontWeight: FontWeight.bold),
-          ),
-          new Text(
-          _nid_path ?? '...',
-            textAlign: TextAlign.center,
-            softWrap: true,
-            textScaleFactor: 0.85,
-          ),
-          const SizedBox(height: 16.0),
-          Text("You have to upload the image of your Institutional ID Card"),
-          Center(child:
-          new RaisedButton(
-            onPressed: () => _openInstitutionalID(),
-            child: new Text("Choose Institutional ID"),
-          ),),
+                  new Text(
+                    'URI PATH ',
+                    textAlign: TextAlign.center,
+                    style: new TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  new Text(
+                    _nid_path ?? '...',
+                    textAlign: TextAlign.center,
+                    softWrap: true,
+                    textScaleFactor: 0.85,
+                  ),
+                  const SizedBox(height: 16.0),
+                  Text("You have to upload the image of your Institutional ID Card"),
+                  Center(child:
+                  new RaisedButton(
+                    onPressed: () => _openInstitutionalID(),
+                    child: new Text("Choose Institutional ID"),
+                  ),),
 
-          new Text(
-            'URI PATH ',
-            textAlign: TextAlign.center,
-            style: new TextStyle(fontWeight: FontWeight.bold),
+                  new Text(
+                    'URI PATH ',
+                    textAlign: TextAlign.center,
+                    style: new TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  new Text(
+                    _institutiional_id_path ?? '...',
+                    textAlign: TextAlign.center,
+                    softWrap: true,
+                    textScaleFactor: 0.85,
+                  ),
+                  const SizedBox(height: 16.0),
+                ],
+              ),
+            ),
+            visible: teacher,
           ),
-          new Text(
-            _institutiional_id_path ?? '...',
-            textAlign: TextAlign.center,
-            softWrap: true,
-            textScaleFactor: 0.85,
-          ),
-          const SizedBox(height: 16.0),
+
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: Row(
@@ -206,7 +219,7 @@ class _RegisterFormState extends State<RegisterForm> {
           ),
         ],
       ),
-    ));
+    )));
   }
 
   bool _submittable() {
