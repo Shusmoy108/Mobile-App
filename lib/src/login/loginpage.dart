@@ -1,188 +1,265 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_login/flutter_login.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:onlineexamplatform/src/home/studenthome.dart';
-import 'package:onlineexamplatform/src/home/teacherhome.dart';
 import 'package:onlineexamplatform/src/registration/registrationpage.dart';
 
-const users = const {
-  '01819648302': '12345',
-  'hunter@gmail.com': 'hunter',
-};
-class LoginScreen extends StatefulWidget {
+class LoginPage extends StatefulWidget {
   @override
-  LoginScreenForm createState() => LoginScreenForm();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class LoginScreenForm extends State<LoginScreen> {
+class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
+  String email;
+  String password;
 
-  String password="",mobile="";
-  int x=-1;
-  @override
-  Future signup(context){
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => Scaffold(),
+  final loginFormKey = GlobalKey<FormState>();
+  bool _autovalidateLoginform = false;
+  bool _shouldObscureText = true;
 
-          //RegisterForm(),
-    ));
-  }
-  Future login(context){
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => Scaffold(),
-    ));
-  }
-  Duration get loginTime => Duration(milliseconds: 2250);
-  Future<String> _signup(LoginData data) {
+  void toggleObscureFlag() {
     setState(() {
-  mobile=data.name;
-  password=data.password;
-  x=0;
-  });
-  print('Name: ${data.name}, Password: ${data.password}');
-  return Future.delayed(loginTime).then((_) {
-//      if (!users.containsKey(data.name)) {
-//        return 'Username not exists';
-//      }
-//      if (users[data.name] != data.password) {
-//        return 'Password does not match';
-//      }
-  return null;
-  });
-}
-  Future<String> _login(LoginData data) {
-    setState(() {
-      mobile=data.name;
-      password=data.password;
-      x=1;
-    });
-    print('Name: ${data.name}, Password: ${data.password}');
-    return Future.delayed(loginTime).then((_) {
-      if (!users.containsKey(data.name)) {
-        return 'Mobile number does not exists';
-      }
-      if (users[data.name] != data.password) {
-        return 'Password does not match';
-      }
-      return null;
+      _shouldObscureText = !_shouldObscureText;
     });
   }
-  String emailValidator(String value){
-    if(value.length<8){
-      return "Invalid mobile number";
-    }
-  }
-  Widget build(BuildContext context) {
-    final inputBorder = BorderRadius.vertical(
-      bottom: Radius.circular(10.0),
-      top: Radius.circular(20.0),
+
+  void login() {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return StudentHome("as");
+        },
+      ),
     );
+    // if (email == 'ab@xy.com' && password == '12345') {
+    //   Navigator.of(context).pushReplacement(
+    //     MaterialPageRoute(
+    //       builder: (BuildContext context) {
+    //         return MainPage();
+    //       },
+    //     ),
+    //   );
+    // }
+  }
 
-    return FlutterLogin(
-      title: 'Quiz Master',
-      //logo: 'images/logo.jpg',
-      onLogin: _login,
-      onSignup: _signup,
-      emailValidator: emailValidator,
-      onSubmitAnimationCompleted: () {
-        if(x==0){
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => RegisterForm(mobile,password),
-        ));}
-        if(x==1){
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => StudentHome(mobile),
-          ));
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: ListView(
+        children: <Widget>[
+          Stack(
+            alignment: Alignment.bottomCenter,
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 20.0),
+                color: Colors.white,
+                child: Form(
+                  key: loginFormKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      animatedCcup(),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      emailField(),
+                      passwordField(),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      loginbutton(),
+                      forgetPassowrd(),
+                      noAccount(),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget animatedCcup() {
+    return Container(
+      child: Center(
+        child: Container(
+          //width: 100,
+          // height: 100,
+          child: Image(
+            image: AssetImage(
+              'images/coffeesmoke.gif',
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget emailField() {
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: 'Email Address *',
+        hintText: 'you@example.com',
+        icon: Icon(
+          Icons.email,
+          color: Colors.black87,
+        ),
+        labelStyle: TextStyle(
+          color: Colors.black87,
+        ),
+      ),
+      keyboardType: TextInputType.emailAddress,
+      autovalidate: _autovalidateLoginform,
+      validator: (String value) {
+        if (value.contains('@') && value.contains('.'))
+          return null;
+        else
+          return 'Email is invalid';
+      },
+      onSaved: (String value) {
+        email = value;
+      },
+    );
+  }
+
+  Widget passwordField() {
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: 'Password *',
+        labelStyle: TextStyle(
+          color: Colors.black87,
+        ),
+        icon: Icon(
+          Icons.lock,
+          color: Colors.black87,
+        ),
+        suffix: GestureDetector(
+          onTap: toggleObscureFlag,
+          child: _shouldObscureText
+              ? Icon(FontAwesomeIcons.solidEye)
+              : Icon(FontAwesomeIcons.solidEyeSlash),
+        ),
+      ),
+      obscureText: _shouldObscureText,
+      validator: (String value) {},
+      onSaved: (String value) {
+        password = value;
+      },
+    );
+  }
+
+  Widget loginbutton() {
+    return InkWell(
+      onTap: () {
+        if (loginFormKey.currentState.validate()) {
+          loginFormKey.currentState.save();
+          login();
+        } else {
+          setState(() {
+            _autovalidateLoginform = true;
+          });
         }
       },
-      onRecoverPassword: (_) => Future(null),
-      messages: LoginMessages(
-        usernameHint: 'Mobile Number',
-        passwordHint: 'Password',
-        confirmPasswordHint: 'Confirm',
-        loginButton: 'LOG IN',
-        signupButton: 'Create a new Account',
-        forgotPasswordButton: 'Forgot Your Password',
-        recoverPasswordButton: 'HELP ME',
-        goBackButton: 'GO BACK',
-        confirmPasswordError: 'Not match!',
-        recoverPasswordDescription:
-        'Please the mobile number of your account. We will send an OTP to your number for password change request.',
-        recoverPasswordSuccess: 'Password rescued successfully',
+      child: Container(
+        width: 100,
+        height: 40,
+        decoration: BoxDecoration(
+          color: Color.fromRGBO(220, 20, 60, 0.8),
+          borderRadius: BorderRadius.circular(30.0),
+          boxShadow: [
+            //BoxShadow(color: Colors.grey, offset: Offset(1, 2)),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'Login',
+              style: TextStyle(
+                  color: Colors.white, fontSize: 15.0, fontFamily: 'Merienda'),
+            ),
+            SizedBox(
+              width: 0.0,
+            ),
+          ],
+        ),
       ),
-      theme: LoginTheme(
-        primaryColor: Colors.teal,
-        accentColor: Colors.yellow,
-        errorColor: Colors.deepOrange,
-        titleStyle: TextStyle(
-          color: Colors.greenAccent,
-          fontFamily: 'Quicksand',
-          letterSpacing: 4,
-        ),
-        bodyStyle: TextStyle(
-          fontStyle: FontStyle.italic,
-          decoration: TextDecoration.underline,
-        ),
-        textFieldStyle: TextStyle(
-          color: Colors.orange,
-          shadows: [Shadow(color: Colors.yellow, blurRadius: 2)],
-        ),
-        buttonStyle: TextStyle(
-          fontWeight: FontWeight.w800,
-          color: Colors.yellow,
-        ),
-        cardTheme: CardTheme(
-          color: Colors.yellow.shade100,
-          elevation: 5,
-          margin: EdgeInsets.only(top: 15),
-          shape: ContinuousRectangleBorder(
-              borderRadius: BorderRadius.circular(100.0)),
-        ),
-        inputTheme: InputDecorationTheme(
-          filled: true,
-          fillColor: Colors.purple.withOpacity(.1),
-          contentPadding: EdgeInsets.zero,
-          errorStyle: TextStyle(
-            backgroundColor: Colors.orange,
-            color: Colors.white,
-          ),
-          labelStyle: TextStyle(fontSize: 12),
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.blue.shade700, width: 4),
-            borderRadius: inputBorder,
-          ),
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.blue.shade400, width: 5),
-            borderRadius: inputBorder,
-          ),
-          errorBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.red.shade700, width: 7),
-            borderRadius: inputBorder,
-          ),
-          focusedErrorBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.red.shade400, width: 8),
-            borderRadius: inputBorder,
-          ),
-          disabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey, width: 5),
-            borderRadius: inputBorder,
+    );
+  }
+
+  Widget submitButton() {
+    return RaisedButton(
+      //icon: Icon(Icons.navigate_next),
+      child: Text('Login'),
+      color: Color.fromRGBO(220, 20, 60, 0.8),
+
+      textColor: Colors.white,
+      onPressed: () {
+        if (loginFormKey.currentState.validate()) {
+          loginFormKey.currentState.save();
+          login();
+        } else {
+          setState(() {
+            _autovalidateLoginform = true;
+          });
+        }
+      },
+    );
+  }
+
+  Widget forgetPassowrd() {
+    return Container(
+      child: FlatButton(
+        onPressed: () {},
+        child: Text(
+          "Forgot Password?",
+          style: TextStyle(
+            decoration: TextDecoration.underline,
+            color: Colors.black87,
+            fontSize: 13.0,
           ),
         ),
-//        buttonTheme: LoginButtonTheme(
-//          splashColor: Colors.purple,
-//          backgroundColor: Colors.pinkAccent,
-//          highlightColor: Colors.lightGreen,
-//          elevation: 9.0,
-//          highlightElevation: 6.0,
-//          shape: BeveledRectangleBorder(
-//            borderRadius: BorderRadius.circular(10),
-//          ),
-//          // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-//          // shape: CircleBorder(side: BorderSide(color: Colors.green)),
-//          // shape: ContinuousRectangleBorder(borderRadius: BorderRadius.circular(55.0)),
-//        ),
       ),
+    );
+  }
 
-
-
+  Widget noAccount() {
+    return Container(
+      padding: EdgeInsets.only(top: 10.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            "Don't have an account?",
+          ),
+          SizedBox(
+            width: 10.0,
+          ),
+          FlatButton(
+            onPressed: () {
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return RegisterForm();
+                  },
+                ),
+                    (Route<dynamic> route) => false,
+              );
+            },
+            child: Text(
+              'Sign Up',
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              side: BorderSide(
+                color: Colors.redAccent,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

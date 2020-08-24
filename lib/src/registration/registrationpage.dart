@@ -1,250 +1,177 @@
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:onlineexamplatform/src/home/studenthome.dart';
 class RegisterForm extends StatefulWidget {
-  String mobile,pass;
-  RegisterForm(this.mobile,this.pass);
+
 
   @override
-  _RegisterFormState createState() => _RegisterFormState(mobile,pass);
+  _RegisterFormState createState() => _RegisterFormState();
 }
 
 class _RegisterFormState extends State<RegisterForm> {
-  String mobile,pass;
-  String _nid_fileName = '...';
-  String _institutiional_id_fileName = '...';
-  String _nid_path = '...';
-  String _institutiional_id_path = '...';
-  String _extension;
-  bool _hasValidMime = false;
-  FileType _nid_pickingType=FileType.any;
-  FileType _institutiional_id_pickingType=FileType.any;
-  _RegisterFormState(this.mobile,this.pass);
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _agreedToTOS = true;
-  bool role= true;
-  bool teacher=false;
-  void _openNID() async {
-    if (_nid_pickingType == FileType.any || _hasValidMime) {
-      try {
-        _nid_path = await FilePicker.getFilePath(type: _nid_pickingType);
-      } on PlatformException catch (e) {
-        print("Unsupported operation" + e.toString());
-      }
-
-      if (!mounted) return;
-
-      setState(() {
-        _nid_fileName = _nid_path != null ? _nid_path.split('/').last : '...';
-
-      });
-    }
+  String mobileNumber,password,name;
+  bool passFlag=false,nameFlag=true, nextFlag=true;
+  bool _autovalidateLoginform = false,_shouldObscureText=true;
+  final loginFormKey = GlobalKey<FormState>();
+  saveAuthData(bool value, String mobile) async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    sp.setBool('auth', value);
+    sp.setString("mobile", mobile);
 
   }
-  void _openInstitutionalID() async {
-    if (_institutiional_id_pickingType == FileType.any || _hasValidMime) {
-      try {
-        _institutiional_id_path = await FilePicker.getFilePath(type: _institutiional_id_pickingType);
-      } on PlatformException catch (e) {
-        print("Unsupported operation" + e.toString());
-      }
-
-      if (!mounted) return;
-
-      setState(() {
-        _institutiional_id_fileName = _institutiional_id_path != null ? _institutiional_id_path.split('/').last : '...';
-
-      });
-    }
-
+  void login() {
+    saveAuthData(true, mobileNumber);
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return StudentHome(mobileNumber);
+        },
+      ),
+    );
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: Colors.teal,
-        title: Text("Quiz Master")),
-        body:Padding(
-            padding: EdgeInsets.all(10),
-            child:Form(
-
-      key: _formKey,
-      child: ListView(
-        //crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          TextFormField(
-            decoration: const InputDecoration(
-              labelText: 'Mobile',
-            )
-            ,
-            enabled: false,
-            initialValue: mobile,
-
-            //enabled: false,
-          ),
-          const SizedBox(height: 16.0),
-          TextFormField(
-            decoration: const InputDecoration(
-              labelText: 'Username',
-            ),
-            validator: (String value) {
-              if (value.trim().isEmpty) {
-                return 'Nickname is required';
-              }
-            },
-          ),
-          const SizedBox(height: 16.0),
-          TextFormField(
-            decoration: const InputDecoration(
-              labelText: 'Full name',
-            ),
-            validator: (String value) {
-              if (value.trim().isEmpty) {
-                return 'Full name is required';
-              }
-            },
-
-          ),
-          TextFormField(
-            decoration: const InputDecoration(
-              labelText: 'Password',
-            ),
-            initialValue: pass,
-            enabled: false,
-
-          ),
-          const SizedBox(height: 16.0),
-          Row(
-            children: <Widget>[
-              Text("Role"),
-              Checkbox(
-                value: role,
-                onChanged: _setRole,
-              ),
-              GestureDetector(
-                onTap: () => _setRole(!role),
-                child: const Text(
-                  'Student',
-                ),
-              ),
-              Checkbox(
-                value: teacher,
-                onChanged: _setTeacher,
-              ),
-              GestureDetector(
-                onTap: () => _setTeacher(!teacher),
-                child: const Text(
-                  'Teacher',
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16.0),
-          Visibility(
-            child: Container(
+        appBar: AppBar(
+            centerTitle: true,
+            backgroundColor: Colors.teal,
+            title: Text("Quiz Master")),
+        body:Container(
+          child:Center(
+            child: Form(
+              key: loginFormKey,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Text("You have to upload the image of your NID/BirthCertificate"),
-                  Center(child:
-                  new RaisedButton(
+                  Visibility(
+                    visible: nameFlag,
+                    child: nameField(),
+                  ),
+                  Visibility(
+                    visible: passFlag,
+                    child: passwordField(),
+                  ),
+                  SizedBox(height: 10,),
+                  Visibility(
+                    visible: nextFlag,
+                    child:  nextbutton(),
+                  ),
 
-                    onPressed: () => _openNID(),
-                    child: new Text("Choose NID/Birth Certificate"),
-                  ),),
-
-                  new Text(
-                    'URI PATH ',
-                    textAlign: TextAlign.center,
-                    style: new TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  new Text(
-                    _nid_path ?? '...',
-                    textAlign: TextAlign.center,
-                    softWrap: true,
-                    textScaleFactor: 0.85,
-                  ),
-                  const SizedBox(height: 16.0),
-                  Text("You have to upload the image of your Institutional ID Card"),
-                  Center(child:
-                  new RaisedButton(
-                    onPressed: () => _openInstitutionalID(),
-                    child: new Text("Choose Institutional ID"),
-                  ),),
-
-                  new Text(
-                    'URI PATH ',
-                    textAlign: TextAlign.center,
-                    style: new TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  new Text(
-                    _institutiional_id_path ?? '...',
-                    textAlign: TextAlign.center,
-                    softWrap: true,
-                    textScaleFactor: 0.85,
-                  ),
-                  const SizedBox(height: 16.0),
                 ],
               ),
-            ),
-            visible: teacher,
-          ),
+            ),),
+        )
+    );
+  }
 
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: Row(
-              children: <Widget>[
-                Checkbox(
-                  value: _agreedToTOS,
-                  onChanged: _setAgreedToTOS,
-                ),
-                GestureDetector(
-                  onTap: () => _setAgreedToTOS(!_agreedToTOS),
-                  child: const Text(
-                    'I agree to the Terms of Services and Privacy Policy',
-                  ),
-                ),
-              ],
+  void toggleObscureFlag() {
+    setState(() {
+      _shouldObscureText = !_shouldObscureText;
+    });
+  }
+  Widget nextbutton() {
+    return InkWell(
+      onTap: () {
+        print(loginFormKey.currentState.validate());
+        if(loginFormKey.currentState.validate() && nameFlag){
+          setState(() {
+            nameFlag=false;
+            passFlag=true;
+          });
+        }
+        else if(loginFormKey.currentState.validate() && passFlag){
+          login();
+        }
+
+      },
+      child: Container(
+        width: 100,
+        height: 40,
+        decoration: BoxDecoration(
+          color: Colors.teal,
+          borderRadius: BorderRadius.circular(30.0),
+          boxShadow: [
+            //BoxShadow(color: Colors.grey, offset: Offset(1, 2)),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'Next',
+              style: TextStyle(
+                  color: Colors.white, fontSize: 15.0, fontFamily: 'Merienda'),
             ),
-          ),
-          Row(
-            children: <Widget>[
-              const Spacer(),
-              OutlineButton(
-                highlightedBorderColor: Colors.black,
-                onPressed: _submittable() ? _submit : null,
-                child: const Text('Create Account'),
-              ),
-            ],
-          ),
-        ],
+            SizedBox(
+              width: 0.0,
+            ),
+          ],
+        ),
       ),
-    )));
+    );
   }
 
-  bool _submittable() {
-    return _agreedToTOS;
-  }
+  Widget passwordField() {
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: 'Password *',
+        labelStyle: TextStyle(
+          color: Colors.black87,
+        ),
+        icon: Icon(
+          Icons.lock,
+          color: Colors.black87,
+        ),
+        suffix: GestureDetector(
+          onTap: toggleObscureFlag,
+          child: _shouldObscureText
+              ? Icon(FontAwesomeIcons.solidEye)
+              : Icon(FontAwesomeIcons.solidEyeSlash),
+        ),
+      ),
+      obscureText: _shouldObscureText,
+      validator: (String value) {
+        if(value.length>5)
+          return null;
+        else
+          return 'Password is required and minimum length is six';
+      },
+      onChanged: (String value) {
+        setState(() {
+          password = value;
+        });
+      },
 
-  void _submit() {
-    _formKey.currentState.validate();
-    print('Form submitted');
+    );
   }
-  void _setRole(bool newValue) {
-    setState(() {
-      role = newValue;
-      teacher= !newValue;
-    });
-  }
-  void _setTeacher(bool newValue) {
-    setState(() {
-      role = !newValue;
-      teacher= newValue;
-    });
-  }
-  void _setAgreedToTOS(bool newValue) {
-    setState(() {
-      _agreedToTOS = newValue;
-    });
+  Widget nameField() {
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: 'Full Name *',
+        hintText: 'John Dee',
+        icon: Icon(
+          Icons.person,
+          color: Colors.black87,
+        ),
+        labelStyle: TextStyle(
+          color: Colors.black87,
+        ),
+      ),
+      autovalidate: _autovalidateLoginform,
+      validator: (String value) {
+        if(value.length>1)
+          return null;
+        else
+          return 'Full name is required.';
+      },
+      onChanged: (String value) {
+        setState(() {
+          name = value;
+        });
+      },
+    );
   }
 }
