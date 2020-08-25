@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:onlineexamplatform/src/exam/startpage.dart';
 class StudentHome extends StatefulWidget {
   String mobile;
   StudentHome(this.mobile);
@@ -10,10 +11,19 @@ class StudentHome extends StatefulWidget {
 class _StudentHomeState extends State<StudentHome> {
   String mobile;
   _StudentHomeState(this.mobile);
+  void joinexam() {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return StartPage();
+        },
+      ),
+    );
+  }
   Widget joinbutton() {
     return InkWell(
       onTap: () {
-
+        joinexam();
       },
       child: Container(
         width: 200,
