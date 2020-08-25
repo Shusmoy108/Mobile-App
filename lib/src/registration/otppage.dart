@@ -1,25 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/services.dart';
-import 'package:onlineexamplatform/src/home/studenthome.dart';
 import 'package:onlineexamplatform/src/registration/registrationpage.dart';
+
 class OTPPage extends StatefulWidget {
-
-
   @override
   _OTPState createState() => _OTPState();
 }
 
 class _OTPState extends State<OTPPage> {
-  String one="",two="",three="",four="",otp="",err="";
+  String one = "", two = "", three = "", four = "", otp = "", err = "";
 
   void OTP() {
     setState(() {
-      otp=one+two+three+four;
-
+      otp = one + two + three + four;
     });
     print(otp);
-    if(otp=="1234"){
+    if (otp == "1234") {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (BuildContext context) {
@@ -27,9 +23,8 @@ class _OTPState extends State<OTPPage> {
           },
         ),
       );
-    }
-    else{
-      err="Incorrect OTP";
+    } else {
+      err = "Incorrect OTP";
     }
 //    Navigator.of(context).pushReplacement(
 //      MaterialPageRoute(
@@ -39,23 +34,27 @@ class _OTPState extends State<OTPPage> {
 //      ),
 //    );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            centerTitle: true,
-            backgroundColor: Colors.teal,
-            title: Text("Quiz Master")),
-        body:SingleChildScrollView(
-
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              children: <Widget>[
-                Container(
-                    alignment: Alignment.center,
-                    child: Text("An OTP is send to your mobile number. Please enter the OTP.", style:TextStyle(fontWeight:FontWeight.bold, fontSize: 25, color: Colors.orange))
-                ),
+      appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: Colors.teal,
+          title: Text("Quiz Master")),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: <Widget>[
+              Container(
+                  alignment: Alignment.center,
+                  child: Text(
+                      "An OTP is send to your mobile number. Please enter the OTP.",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25,
+                          color: Colors.orange))),
 //                Container(
 //                  height: MediaQuery.of(context).size.height/4.5,
 //                  width: MediaQuery.of(context).size.width/2.5,
@@ -65,38 +64,58 @@ class _OTPState extends State<OTPPage> {
 //                      )
 //                  ),
 //                ),
-                SizedBox(height: 10,),
-                Container(
-                    alignment: Alignment.center,
-                    child: Text(err, style:TextStyle(fontWeight:FontWeight.bold, fontSize: 25, color: Colors.redAccent))
-                ),
-                SizedBox(height: 50,),
-                Container(
-                    alignment: Alignment.centerLeft,
-                    child: Text("Enter OTP:", style:TextStyle(fontWeight:FontWeight.bold, fontSize: 20, color: Colors.orange))
-                ),
-                SizedBox(height: 8,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    otpBoxBuilder(0),
-                    SizedBox(width: 5,),
-                    otpBoxBuilder(1),
-                    SizedBox(width: 5,),
-                    otpBoxBuilder(2),
-                    SizedBox(width: 5,),
-                    otpBoxBuilder(3),
-                  ],
-                ),
-                SizedBox(height: 50,),
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                  alignment: Alignment.center,
+                  child: Text(err,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25,
+                          color: Colors.redAccent))),
+              SizedBox(
+                height: 50,
+              ),
+              Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Enter OTP:",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.orange))),
+              SizedBox(
+                height: 8,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  otpBoxBuilder(0),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  otpBoxBuilder(1),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  otpBoxBuilder(2),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  otpBoxBuilder(3),
+                ],
+              ),
+              SizedBox(
+                height: 50,
+              ),
               submitbutton(),
-              ],
-            ),
+            ],
           ),
         ),
-
+      ),
     );
   }
+
   Widget submitbutton() {
     return InkWell(
       onTap: () {
@@ -118,8 +137,7 @@ class _OTPState extends State<OTPPage> {
           children: <Widget>[
             Text(
               'Submit',
-              style: TextStyle(
-                  color: Colors.white, fontSize: 20.0),
+              style: TextStyle(color: Colors.white, fontSize: 20.0),
             ),
             SizedBox(
               width: 0.0,
@@ -129,35 +147,31 @@ class _OTPState extends State<OTPPage> {
       ),
     );
   }
+
   String replaceCharAt(String oldString, int index, String newChar) {
-    return oldString.substring(0, index) + newChar + oldString.substring(index + 1);
+    return oldString.substring(0, index) +
+        newChar +
+        oldString.substring(index + 1);
   }
+
   Widget otpBoxBuilder(int index) {
     return Container(
       alignment: Alignment.center,
       height: 70,
       width: 70,
       child: TextField(
-
         onChanged: (String value) {
           setState(() {
-
-           if(index==0){
-             one=value;
-           }
-           else if(index==1){
-             two=value;
-           }
-           else if(index==2){
-             three=value;
-           }
-           else if(index==3){
-             four=value;
-           }
-
+            if (index == 0) {
+              one = value;
+            } else if (index == 1) {
+              two = value;
+            } else if (index == 2) {
+              three = value;
+            } else if (index == 3) {
+              four = value;
+            }
           });
-
-
         },
         style: TextStyle(
             fontWeight: FontWeight.bold, fontSize: 23, color: Colors.blue),
@@ -167,8 +181,7 @@ class _OTPState extends State<OTPPage> {
         textAlign: TextAlign.center,
       ),
       decoration:
-      BoxDecoration(border: Border.all(color: Colors.blue, width: 3)),
+          BoxDecoration(border: Border.all(color: Colors.blue, width: 3)),
     );
   }
-
 }

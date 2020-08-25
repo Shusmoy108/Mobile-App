@@ -2,24 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:onlineexamplatform/src/home/studenthome.dart';
+
 class RegisterForm extends StatefulWidget {
-
-
   @override
   _RegisterFormState createState() => _RegisterFormState();
 }
 
 class _RegisterFormState extends State<RegisterForm> {
-  String mobileNumber,password,name;
-  bool passFlag=false,nameFlag=true, nextFlag=true;
-  bool _autovalidateLoginform = false,_shouldObscureText=true;
+  String mobileNumber, password, name;
+  bool passFlag = false, nameFlag = true, nextFlag = true;
+  bool _autovalidateLoginform = false, _shouldObscureText = true;
   final loginFormKey = GlobalKey<FormState>();
   saveAuthData(bool value, String mobile) async {
     SharedPreferences sp = await SharedPreferences.getInstance();
     sp.setBool('auth', value);
     sp.setString("mobile", mobile);
-
   }
+
   void login() {
     saveAuthData(true, mobileNumber);
     Navigator.of(context).pushReplacement(
@@ -30,6 +29,7 @@ class _RegisterFormState extends State<RegisterForm> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,8 +37,8 @@ class _RegisterFormState extends State<RegisterForm> {
             centerTitle: true,
             backgroundColor: Colors.teal,
             title: Text("Quiz Master")),
-        body:Container(
-          child:Center(
+        body: Container(
+          child: Center(
             child: Form(
               key: loginFormKey,
               child: Column(
@@ -53,17 +53,18 @@ class _RegisterFormState extends State<RegisterForm> {
                     visible: passFlag,
                     child: passwordField(),
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                   Visibility(
                     visible: nextFlag,
-                    child:  nextbutton(),
+                    child: nextbutton(),
                   ),
-
                 ],
               ),
-            ),),
-        )
-    );
+            ),
+          ),
+        ));
   }
 
   void toggleObscureFlag() {
@@ -71,20 +72,19 @@ class _RegisterFormState extends State<RegisterForm> {
       _shouldObscureText = !_shouldObscureText;
     });
   }
+
   Widget nextbutton() {
     return InkWell(
       onTap: () {
         print(loginFormKey.currentState.validate());
-        if(loginFormKey.currentState.validate() && nameFlag){
+        if (loginFormKey.currentState.validate() && nameFlag) {
           setState(() {
-            nameFlag=false;
-            passFlag=true;
+            nameFlag = false;
+            passFlag = true;
           });
-        }
-        else if(loginFormKey.currentState.validate() && passFlag){
+        } else if (loginFormKey.currentState.validate() && passFlag) {
           login();
         }
-
       },
       child: Container(
         width: 100,
@@ -134,7 +134,7 @@ class _RegisterFormState extends State<RegisterForm> {
       ),
       obscureText: _shouldObscureText,
       validator: (String value) {
-        if(value.length>5)
+        if (value.length > 5)
           return null;
         else
           return 'Password is required and minimum length is six';
@@ -144,9 +144,9 @@ class _RegisterFormState extends State<RegisterForm> {
           password = value;
         });
       },
-
     );
   }
+
   Widget nameField() {
     return TextFormField(
       decoration: InputDecoration(
@@ -162,7 +162,7 @@ class _RegisterFormState extends State<RegisterForm> {
       ),
       autovalidate: _autovalidateLoginform,
       validator: (String value) {
-        if(value.length>1)
+        if (value.length > 1)
           return null;
         else
           return 'Full name is required.';

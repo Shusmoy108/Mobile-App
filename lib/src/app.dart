@@ -9,6 +9,7 @@ class App extends StatelessWidget {
     SharedPreferences sp = await SharedPreferences.getInstance();
     return sp.getBool('auth');
   }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

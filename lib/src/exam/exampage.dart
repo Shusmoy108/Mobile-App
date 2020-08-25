@@ -1,52 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:onlineexamplatform/src/exam/resultpage.dart';
-import 'package:onlineexamplatform/src/home/studenthome.dart';
-import 'package:onlineexamplatform/src/registration/registrationpage.dart';
+import 'dart:async';
+
+import 'package:onlineexamplatform/src/exam/timer.dart';
+
 class ExamPage extends StatefulWidget {
-
-
   @override
   _ExamState createState() => _ExamState();
 }
 
 class _ExamState extends State<ExamPage> {
-  int examnumber=0;
-  var exam=[{
-    "type":'Q/A',
-    "question":"What is your name?"
-  },
+  int examnumber = 0;
+  var exam = [
+    {"type": 'Q/A', "question": "What is your name?"},
+    {"type": 'Explain', "question": "Explain the exam?"},
+    {"type": 'Y/N', "question": "Are you a man?"},
+    {"type": 'T/F', "question": "You are a man"},
+    {"type": 'gap', "question": "I am a _______"},
     {
-      "type":'Explain',
-      "question":"Explain the exam?"
+      "type": 'MCQ',
+      "question": "2+2 = ?",
+      "options": ["1", "2", "3", "4"]
     },
     {
-      "type":'Y/N',
-      "question":"Are you a man?"
-    },
-
-    {
-      "type":'T/F',
-      "question":"You are a man"
-    },
-    {
-      "type":'gap',
-      "question":"I am a _______"
-    },
-    {
-      "type":'MCQ',
-      "question":"2+2 = ?",
-      "options":["1","2","3","4"]
-    },
-    {
-      "type":'Multipleanswer',
-      "question":"2+2 = ?",
-      "options":["1","2","3","4"]
+      "type": 'Multipleanswer',
+      "question": "2+2 = ?",
+      "options": ["1", "2", "3", "4"]
     }
   ];
-  List<String> answers= new List(10);
-  Widget MCQ(String question, var options, int index){
+  List<String> answers = new List(10);
+  Widget MCQ(String question, var options, int index) {
     List<Widget> widgets = [];
     for (var option in options) {
       widgets.add(
@@ -54,11 +38,10 @@ class _ExamState extends State<ExamPage> {
           value: option,
           groupValue: answers[index],
           title: Text(option),
-
           onChanged: (value) {
-           setState(() {
-             answers[index]=value;
-           });
+            setState(() {
+              answers[index] = value;
+            });
           },
           selected: answers[index] == option,
           activeColor: Colors.green,
@@ -67,74 +50,84 @@ class _ExamState extends State<ExamPage> {
     }
     return Container(
       child: Column(
-      children: <Widget>[
-        Text(question, style:TextStyle(fontWeight:FontWeight.bold, fontSize: 25, color: Colors.orange)),
-        Column(
-          children: widgets,
-        )
-      ],
-      ),
-    );
-  }
-  Widget Gap(String question, int index){
-    return Container(
-      child: Column(
         children: <Widget>[
-          Text(question, style:TextStyle(fontWeight:FontWeight.bold, fontSize: 25, color: Colors.orange)),
-        SizedBox(height: 10,),
-        TextFormField(
-          initialValue: "",
-          textInputAction: TextInputAction.newline,
-          keyboardType: TextInputType.multiline,
-          maxLines: null,
-
-          decoration: InputDecoration(
-
-            border: new OutlineInputBorder(
-              borderRadius: new BorderRadius.circular(25.0),
-              borderSide: new BorderSide(
-              ),
-            ),
-            //fillColor: Colors.green
-
-            labelText: 'Answer',
-            hintText: 'John Dee',
-            icon: Icon(
-              Icons.description,
-              color: Colors.black87,
-            ),
-
-            labelStyle: TextStyle(
-              color: Colors.black87,
-            ),
-          ),
-
-          onChanged: (String value) {
-            setState(() {
-              answers[index] = value;
-            });
-          },
-        )
-
+          Text(question,
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25,
+                  color: Colors.orange)),
+          Column(
+            children: widgets,
+          )
         ],
       ),
     );
   }
-  Widget YesNo(String question, int index){
+
+  Widget Gap(String question, int index) {
     return Container(
       child: Column(
         children: <Widget>[
-          Text(question, style:TextStyle(fontWeight:FontWeight.bold, fontSize: 25, color: Colors.orange)),
+          Text(question,
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25,
+                  color: Colors.orange)),
+          SizedBox(
+            height: 10,
+          ),
+          TextFormField(
+            initialValue: "",
+            textInputAction: TextInputAction.newline,
+            keyboardType: TextInputType.multiline,
+            maxLines: null,
+            decoration: InputDecoration(
+              border: new OutlineInputBorder(
+                borderRadius: new BorderRadius.circular(25.0),
+                borderSide: new BorderSide(),
+              ),
+              //fillColor: Colors.green
+
+              labelText: 'Answer',
+              hintText: 'John Dee',
+              icon: Icon(
+                Icons.description,
+                color: Colors.black87,
+              ),
+
+              labelStyle: TextStyle(
+                color: Colors.black87,
+              ),
+            ),
+            onChanged: (String value) {
+              setState(() {
+                answers[index] = value;
+              });
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget YesNo(String question, int index) {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          Text(question,
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25,
+                  color: Colors.orange)),
           Column(
             children: <Widget>[
               RadioListTile(
                 value: "Yes",
                 groupValue: answers[index],
                 title: Text("Yes"),
-
                 onChanged: (value) {
                   setState(() {
-                    answers[index]=value;
+                    answers[index] = value;
                   });
                 },
                 selected: answers[index] == "Yes",
@@ -144,10 +137,9 @@ class _ExamState extends State<ExamPage> {
                 value: "No",
                 groupValue: answers[index],
                 title: Text("No"),
-
                 onChanged: (value) {
                   setState(() {
-                    answers[index]=value;
+                    answers[index] = value;
                   });
                 },
                 selected: answers[index] == "No",
@@ -159,21 +151,25 @@ class _ExamState extends State<ExamPage> {
       ),
     );
   }
-  Widget TrueFalse(String question, int index){
+
+  Widget TrueFalse(String question, int index) {
     return Container(
       child: Column(
         children: <Widget>[
-          Text(question, style:TextStyle(fontWeight:FontWeight.bold, fontSize: 25, color: Colors.orange)),
+          Text(question,
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25,
+                  color: Colors.orange)),
           Column(
             children: <Widget>[
               RadioListTile(
                 value: "True",
                 groupValue: answers[index],
                 title: Text("True"),
-
                 onChanged: (value) {
                   setState(() {
-                    answers[index]=value;
+                    answers[index] = value;
                   });
                 },
                 selected: answers[index] == "True",
@@ -183,10 +179,9 @@ class _ExamState extends State<ExamPage> {
                 value: "False",
                 groupValue: answers[index],
                 title: Text("False"),
-
                 onChanged: (value) {
                   setState(() {
-                    answers[index]=value;
+                    answers[index] = value;
                   });
                 },
                 selected: answers[index] == "False",
@@ -198,7 +193,8 @@ class _ExamState extends State<ExamPage> {
       ),
     );
   }
-  Widget Multipleanswer(String question, var options, int index){
+
+  Widget Multipleanswer(String question, var options, int index) {
     List<Widget> widgets = [];
     for (var option in options) {
       widgets.add(
@@ -211,12 +207,10 @@ class _ExamState extends State<ExamPage> {
               if (value) {
                 if (answers[index] == null) {
                   answers[index] = option;
-                }
-                else {
+                } else {
                   answers[index] = answers[index] + "," + option;
                 }
-              }
-              else {
+              } else {
                 var str = answers[index].split(",");
                 if (str.contains(option)) {
                   str.remove(option);
@@ -233,63 +227,70 @@ class _ExamState extends State<ExamPage> {
         ),
       );
     }
-      print(widgets.length);
-      return Container(
-        child: Column(
-          children: <Widget>[
-            Text(question, style:TextStyle(fontWeight:FontWeight.bold, fontSize: 25, color: Colors.orange)),
-            Column(
-              children: widgets,
-            )
-          ],
-        ),
-      );
-
-  }
-  Widget getExamWidget(int i){
-
-      if(exam[i]['type']=="MCQ"){
-       return MCQ(exam[i]["question"], exam[i]["options"], i);
-      }
-      else if(exam[i]['type']=='Multipleanswer'){
-        return Multipleanswer(exam[i]["question"], exam[i]["options"], i);
-      }
-      else if(exam[i]['type']=='gap'||exam[i]['type']=='Explain'||exam[i]['type']=='Q/A'){
-    return Gap(exam[i]["question"], i);
-      }
-      else if(exam[i]['type']=='T/F'){
-    return TrueFalse(exam[i]["question"], i);
-      }
-      else if(exam[i]['type']=='Y/N'){
-    return YesNo(exam[i]["question"], i);
-      }
-
-
-  
-  }
-  Widget buttons(){
+    print(widgets.length);
     return Container(
-      child: Row(
+      child: Column(
         children: <Widget>[
-          Visibility(
-            visible: examnumber>0,
-            child: prevbutton(),
-          ),
-          SizedBox(width: 10,),
-          Visibility(
-            visible: examnumber==(exam.length-1),
-            child: submitbutton(),
-          ),
-          SizedBox(width: 10,),
-          Visibility(
-            visible: examnumber<exam.length && examnumber!=(exam.length-1),
-            child: nextbutton(),
-          ),
-          SizedBox(width: 10,)
+          Text(question,
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25,
+                  color: Colors.orange)),
+          Column(
+            children: widgets,
+          )
         ],
       ),
     );
   }
+
+  Widget getExamWidget(int i) {
+    if (exam[i]['type'] == "MCQ") {
+      return MCQ(exam[i]["question"], exam[i]["options"], i);
+    } else if (exam[i]['type'] == 'Multipleanswer') {
+      return Multipleanswer(exam[i]["question"], exam[i]["options"], i);
+    } else if (exam[i]['type'] == 'gap' ||
+        exam[i]['type'] == 'Explain' ||
+        exam[i]['type'] == 'Q/A') {
+      return Gap(exam[i]["question"], i);
+    } else if (exam[i]['type'] == 'T/F') {
+      return TrueFalse(exam[i]["question"], i);
+    } else if (exam[i]['type'] == 'Y/N') {
+      return YesNo(exam[i]["question"], i);
+    }
+  }
+
+  Widget buttons() {
+    return Container(
+      child: Row(
+        children: <Widget>[
+          Visibility(
+            visible: examnumber > 0,
+            child: prevbutton(),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Visibility(
+            visible: examnumber == (exam.length - 1),
+            child: submitbutton(),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Visibility(
+            visible:
+                examnumber < exam.length && examnumber != (exam.length - 1),
+            child: nextbutton(),
+          ),
+          SizedBox(
+            width: 10,
+          )
+        ],
+      ),
+    );
+  }
+
   Widget nextbutton() {
     return InkWell(
       onTap: () {
@@ -297,8 +298,6 @@ class _ExamState extends State<ExamPage> {
           examnumber++;
         });
         //login();
-
-
       },
       child: Container(
         width: 100,
@@ -327,13 +326,13 @@ class _ExamState extends State<ExamPage> {
       ),
     );
   }
+
   Widget prevbutton() {
     return InkWell(
       onTap: () {
         setState(() {
-         examnumber--;
+          examnumber--;
         });
-
       },
       child: Container(
         width: 100,
@@ -362,8 +361,8 @@ class _ExamState extends State<ExamPage> {
       ),
     );
   }
-  void result() {
 
+  void result() {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (BuildContext context) {
@@ -380,30 +379,46 @@ class _ExamState extends State<ExamPage> {
 //      ),
 //    );
   }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
           centerTitle: true,
           backgroundColor: Colors.teal,
           title: Text("Quiz Master")),
-      body:SingleChildScrollView(
-
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: <Widget>[
-             getExamWidget(examnumber),
-              SizedBox(height: 50,),
+              Container(
+                //width: 100.0,
+                padding: EdgeInsets.only(top: 3.0, right: 4.0),
+                child: CountDownTimer(
+                  secondsRemaining: 30,
+                  whenTimeExpires: () {
+                 result();
+
+                  }
+//                  countDownStyle: TextStyle(
+//                      color: Color(0XFFf5a623),
+//                      fontSize: 17.0,
+//                      height: 1.2),
+                ),
+              ),
+              getExamWidget(examnumber),
+              SizedBox(
+                height: 50,
+              ),
               buttons(),
             ],
           ),
         ),
       ),
-
     );
   }
+
   Widget submitbutton() {
     return InkWell(
       onTap: () {
@@ -425,8 +440,7 @@ class _ExamState extends State<ExamPage> {
           children: <Widget>[
             Text(
               'Submit',
-              style: TextStyle(
-                  color: Colors.white, fontSize: 15.0),
+              style: TextStyle(color: Colors.white, fontSize: 15.0),
             ),
             SizedBox(
               width: 0.0,
@@ -436,7 +450,4 @@ class _ExamState extends State<ExamPage> {
       ),
     );
   }
-
-
-
 }

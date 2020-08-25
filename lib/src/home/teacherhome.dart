@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 class TeacherHome extends StatefulWidget {
   String mobile;
   TeacherHome(this.mobile);
@@ -17,9 +18,7 @@ class _TeacherHomeState extends State<TeacherHome> {
         appBar: AppBar(
             centerTitle: true,
             backgroundColor: Colors.teal,
-            title: Text("Quiz Master")
-
-        ),
+            title: Text("Quiz Master")),
         drawer: Drawer(
           child: Column(
             children: <Widget>[
@@ -59,9 +58,7 @@ class _TeacherHomeState extends State<TeacherHome> {
                             fontSize: 18,
                             fontWeight: FontWeight.w500),
                       ),
-                      onTap: () {
-
-                      },
+                      onTap: () {},
                     ),
                     ListTile(
                       leading: Icon(Icons.assignment_turned_in),
@@ -72,9 +69,7 @@ class _TeacherHomeState extends State<TeacherHome> {
                             fontSize: 18,
                             fontWeight: FontWeight.w500),
                       ),
-                      onTap: () async {
-
-                      },
+                      onTap: () async {},
                     ),
                     ListTile(
                       leading: Icon(Icons.group),
@@ -85,9 +80,7 @@ class _TeacherHomeState extends State<TeacherHome> {
                             fontSize: 18,
                             fontWeight: FontWeight.w500),
                       ),
-                      onTap: () {
-
-                      },
+                      onTap: () {},
                     ),
                     ListTile(
                       leading: Icon(Icons.insert_chart),
@@ -98,39 +91,33 @@ class _TeacherHomeState extends State<TeacherHome> {
                             fontSize: 18,
                             fontWeight: FontWeight.w500),
                       ),
-                      onTap: () {
-
-                      },
+                      onTap: () {},
                     ),
                   ],
                 ),
               ),
               Container(
-                // This align moves the children to the bottom
+                  // This align moves the children to the bottom
                   child: Align(
                       alignment: FractionalOffset.bottomCenter,
                       // This container holds all the children that will be aligned
                       // on the bottom and should not scroll with the above ListView
                       child: Container(
                           child: Column(
-                            children: <Widget>[
-                              Divider(),
-
-                              ListTile(
-                                  leading: Icon(Icons.work),
-                                  title: Text('About Us',
-                                      style: TextStyle(
-                                          fontFamily: "ProximaNova",
-                                          fontSize: 18,
-                                          fontWeight:
-                                          FontWeight.w500))),
-                            ],
-                          ))))
+                        children: <Widget>[
+                          Divider(),
+                          ListTile(
+                              leading: Icon(Icons.work),
+                              title: Text('About Us',
+                                  style: TextStyle(
+                                      fontFamily: "ProximaNova",
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500))),
+                        ],
+                      ))))
             ],
           ),
         ),
-        body:Container());
+        body: Container());
   }
-
-
 }

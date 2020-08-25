@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:onlineexamplatform/src/exam/startpage.dart';
+
 class StudentHome extends StatefulWidget {
   String mobile;
   StudentHome(this.mobile);
@@ -20,6 +21,7 @@ class _StudentHomeState extends State<StudentHome> {
       ),
     );
   }
+
   Widget joinbutton() {
     return InkWell(
       onTap: () {
@@ -52,25 +54,23 @@ class _StudentHomeState extends State<StudentHome> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
             centerTitle: true,
             backgroundColor: Colors.teal,
-            title: Text("Quiz Master")
-
-        ),
-
-        body:Container(
-          child:Center(child: Column(
+            title: Text("Quiz Master")),
+        body: Container(
+            child: Center(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[ joinbutton(),],
-          )
-            ,)
-        ));
+            children: <Widget>[
+              joinbutton(),
+            ],
+          ),
+        )));
   }
-
-
 }

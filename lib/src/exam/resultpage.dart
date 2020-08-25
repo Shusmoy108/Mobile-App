@@ -1,21 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter/services.dart';
-import 'package:onlineexamplatform/src/exam/exampage.dart';
 import 'package:onlineexamplatform/src/home/studenthome.dart';
-import 'package:onlineexamplatform/src/registration/registrationpage.dart';
+
 class ResultPage extends StatefulWidget {
-
-
   @override
   _ResultState createState() => _ResultState();
 }
 
 class _ResultState extends State<ResultPage> {
-
-
   void exam() {
-
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (BuildContext context) {
@@ -32,6 +24,7 @@ class _ResultState extends State<ResultPage> {
 //      ),
 //    );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,36 +32,50 @@ class _ResultState extends State<ResultPage> {
           centerTitle: true,
           backgroundColor: Colors.teal,
           title: Text("Quiz Master")),
-      body:SingleChildScrollView(
-
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: <Widget>[
               Container(
                   alignment: Alignment.center,
-                  child: Text("Thank You for attending the exam.", style:TextStyle(fontWeight:FontWeight.bold, fontSize: 25, color: Colors.orange))
+                  child: Text("Thank You for attending the exam.",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25,
+                          color: Colors.orange))),
+              SizedBox(
+                height: 25,
               ),
-SizedBox(height: 25,),
               Container(
                   alignment: Alignment.center,
-                  child: Text("Your result will be given soon.", style:TextStyle(fontWeight:FontWeight.bold, fontSize: 25, color: Colors.orange))
+                  child: Text("Your result will be given soon.",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25,
+                          color: Colors.orange))),
+              SizedBox(
+                height: 25,
               ),
-              SizedBox(height: 25,),
               Container(
                   alignment: Alignment.center,
-                  child: Text("You will be notified about your result through sms.", style:TextStyle(fontWeight:FontWeight.bold, fontSize: 25, color: Colors.orange))
+                  child: Text(
+                      "You will be notified about your result through sms.",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25,
+                          color: Colors.orange))),
+              SizedBox(
+                height: 50,
               ),
-
-              SizedBox(height: 50,),
               submitbutton(),
             ],
           ),
         ),
       ),
-
     );
   }
+
   Widget submitbutton() {
     return InkWell(
       onTap: () {
@@ -90,8 +97,7 @@ SizedBox(height: 25,),
           children: <Widget>[
             Text(
               'Home',
-              style: TextStyle(
-                  color: Colors.white, fontSize: 20.0),
+              style: TextStyle(color: Colors.white, fontSize: 20.0),
             ),
             SizedBox(
               width: 0.0,
@@ -101,7 +107,4 @@ SizedBox(height: 25,),
       ),
     );
   }
-
-
-
 }
