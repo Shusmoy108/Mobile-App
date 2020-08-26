@@ -227,7 +227,6 @@ class _ExamState extends State<ExamPage> {
         ),
       );
     }
-    print(widgets.length);
     return Container(
       child: Column(
         children: <Widget>[
@@ -396,7 +395,7 @@ class _ExamState extends State<ExamPage> {
                 //width: 100.0,
                 padding: EdgeInsets.only(top: 3.0, right: 4.0),
                 child: CountDownTimer(
-                  secondsRemaining: 30,
+                  secondsRemaining: 60,
                   whenTimeExpires: () {
                  result();
 
