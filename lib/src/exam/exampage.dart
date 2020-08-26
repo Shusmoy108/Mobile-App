@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:onlineexamplatform/src/exam/resultpage.dart';
-import 'dart:async';
 
 import 'package:onlineexamplatform/src/exam/timer.dart';
 
@@ -30,6 +29,17 @@ class _ExamState extends State<ExamPage> {
     }
   ];
   List<String> answers = new List(10);
+  @override
+  void initState() {
+    setState(() {
+      for (int i = 0; i < 10; i++) {
+        te[i] = new TextEditingController();
+        answers[i] = "Not Answered";
+      }
+    });
+  }
+
+  List<TextEditingController> te = new List(10);
   Widget MCQ(String question, var options, int index) {
     List<Widget> widgets = [];
     for (var option in options) {
@@ -65,6 +75,7 @@ class _ExamState extends State<ExamPage> {
   }
 
   Widget Gap(String question, int index) {
+    //te[index]=new TextEditingController();
     return Container(
       child: Column(
         children: <Widget>[
@@ -77,7 +88,7 @@ class _ExamState extends State<ExamPage> {
             height: 10,
           ),
           TextFormField(
-            initialValue: "",
+            controller: te[index],
             textInputAction: TextInputAction.newline,
             keyboardType: TextInputType.multiline,
             maxLines: null,
@@ -89,7 +100,7 @@ class _ExamState extends State<ExamPage> {
               //fillColor: Colors.green
 
               labelText: 'Answer',
-              hintText: 'John Dee',
+              // hintText: 'John Dee',
               icon: Icon(
                 Icons.description,
                 color: Colors.black87,
@@ -99,11 +110,6 @@ class _ExamState extends State<ExamPage> {
                 color: Colors.black87,
               ),
             ),
-            onChanged: (String value) {
-              setState(() {
-                answers[index] = value;
-              });
-            },
           )
         ],
       ),
@@ -199,6 +205,7 @@ class _ExamState extends State<ExamPage> {
     for (var option in options) {
       widgets.add(
         CheckboxListTile(
+          controlAffinity: ListTileControlAffinity.leading,
           value: answers[index] != null &&
               answers[index].split(",").contains(option),
           title: Text(option),
@@ -294,6 +301,11 @@ class _ExamState extends State<ExamPage> {
     return InkWell(
       onTap: () {
         setState(() {
+          if (exam[examnumber]['type'] == 'gap' ||
+              exam[examnumber]['type'] == 'Explain' ||
+              exam[examnumber]['type'] == 'Q/A') {
+            answers[examnumber] = te[examnumber].text;
+          }
           examnumber++;
         });
         //login();
@@ -330,6 +342,11 @@ class _ExamState extends State<ExamPage> {
     return InkWell(
       onTap: () {
         setState(() {
+          if (exam[examnumber]['type'] == 'gap' ||
+              exam[examnumber]['type'] == 'Explain' ||
+              exam[examnumber]['type'] == 'Q/A') {
+            answers[examnumber] = te[examnumber].text;
+          }
           examnumber--;
         });
       },
@@ -365,18 +382,10 @@ class _ExamState extends State<ExamPage> {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (BuildContext context) {
-          return ResultPage();
+          return ResultPage(answers);
         },
       ),
     );
-
-//    Navigator.of(context).pushReplacement(
-//      MaterialPageRoute(
-//        builder: (BuildContext context) {
-//          return StudentHome("as");
-//        },
-//      ),
-//    );
   }
 
   @override
@@ -395,15 +404,10 @@ class _ExamState extends State<ExamPage> {
                 //width: 100.0,
                 padding: EdgeInsets.only(top: 3.0, right: 4.0),
                 child: CountDownTimer(
-                  secondsRemaining: 60,
-                  whenTimeExpires: () {
-                 result();
-
-                  }
-//                  countDownStyle: TextStyle(
-//                      color: Color(0XFFf5a623),
-//                      fontSize: 17.0,
-//                      height: 1.2),
+                  secondsRemaining: 30,
+                  whenTimeExpires: result,
+                  countDownTimerStyle: TextStyle(
+                      color: Color(0XFFf5a623), fontSize: 17.0, height: 1.2),
                 ),
               ),
               getExamWidget(examnumber),

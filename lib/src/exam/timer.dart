@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:onlineexamplatform/src/exam/resultpage.dart';
+
 class CountDownTimer extends StatefulWidget {
   const CountDownTimer({
     Key key,
@@ -31,6 +31,7 @@ class _CountDownTimerState extends State<CountDownTimer>
     // In case user doesn't provide formatter use the default one
     // for that create a method which will be called formatHHMMSS or whatever you like
   }
+
   String formatHHMMSS(int seconds) {
     int hours = (seconds / 3600).truncate();
     seconds = (seconds % 3600).truncate();
@@ -46,23 +47,7 @@ class _CountDownTimerState extends State<CountDownTimer>
 
     return "$hoursStr:$minutesStr:$secondsStr";
   }
-  void result() {
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (BuildContext context) {
-          return ResultPage();
-        },
-      ),
-    );
 
-//    Navigator.of(context).pushReplacement(
-//      MaterialPageRoute(
-//        builder: (BuildContext context) {
-//          return StudentHome("as");
-//        },
-//      ),
-//    );
-  }
   @override
   void initState() {
     super.initState();
@@ -73,8 +58,9 @@ class _CountDownTimerState extends State<CountDownTimer>
     );
     _controller.reverse(from: widget.secondsRemaining.toDouble());
     _controller.addStatusListener((status) {
-      if (status == AnimationStatus.completed || status == AnimationStatus.dismissed) {
-        result();
+      if (status == AnimationStatus.completed ||
+          status == AnimationStatus.dismissed) {
+        widget.whenTimeExpires();
       }
     });
   }
@@ -113,15 +99,8 @@ class _CountDownTimerState extends State<CountDownTimer>
         child: AnimatedBuilder(
             animation: _controller,
             builder: (_, Widget child) {
-              return Text(
-                timerDisplayString,
-                style:  TextStyle(
-                  fontWeight: FontWeight.bold,
-                      color: Colors.red,
-                      fontSize: 20.0,
-                //      height: 1.2
-                ),
-              );
+              return Text(timerDisplayString,
+                  style: widget.countDownTimerStyle);
             }));
   }
 }

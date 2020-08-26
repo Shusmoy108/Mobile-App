@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:onlineexamplatform/src/exam/answerscript.dart';
 import 'package:onlineexamplatform/src/home/studenthome.dart';
 
+// ignore: must_be_immutable
 class ResultPage extends StatefulWidget {
+  List<String> answers;
+  ResultPage(this.answers);
   @override
-  _ResultState createState() => _ResultState();
+  _ResultState createState() => _ResultState(answers);
 }
 
 class _ResultState extends State<ResultPage> {
+  List<String> answers;
+  _ResultState(this.answers);
   void exam() {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
@@ -15,14 +21,16 @@ class _ResultState extends State<ResultPage> {
         },
       ),
     );
+  }
 
-//    Navigator.of(context).pushReplacement(
-//      MaterialPageRoute(
-//        builder: (BuildContext context) {
-//          return StudentHome("as");
-//        },
-//      ),
-//    );
+  void answer() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return AnswerPage(answers);
+        },
+      ),
+    );
   }
 
   @override
@@ -69,6 +77,10 @@ class _ResultState extends State<ResultPage> {
                 height: 50,
               ),
               submitbutton(),
+              SizedBox(
+                height: 20,
+              ),
+              answerbutton()
             ],
           ),
         ),
@@ -82,7 +94,7 @@ class _ResultState extends State<ResultPage> {
         exam();
       },
       child: Container(
-        width: 200,
+        width: 250,
         height: 40,
         decoration: BoxDecoration(
           color: Colors.teal,
@@ -97,6 +109,38 @@ class _ResultState extends State<ResultPage> {
           children: <Widget>[
             Text(
               'Home',
+              style: TextStyle(color: Colors.white, fontSize: 20.0),
+            ),
+            SizedBox(
+              width: 0.0,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget answerbutton() {
+    return InkWell(
+      onTap: () {
+        answer();
+      },
+      child: Container(
+        width: 250,
+        height: 40,
+        decoration: BoxDecoration(
+          color: Colors.blue,
+          borderRadius: BorderRadius.circular(30.0),
+          boxShadow: [
+            //BoxShadow(color: Colors.grey, offset: Offset(1, 2)),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'Show Answer Script',
               style: TextStyle(color: Colors.white, fontSize: 20.0),
             ),
             SizedBox(

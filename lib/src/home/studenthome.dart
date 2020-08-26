@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:onlineexamplatform/src/exam/startpage.dart';
 
+// ignore: must_be_immutable
 class StudentHome extends StatefulWidget {
   String mobile;
   StudentHome(this.mobile);
@@ -55,26 +56,91 @@ class _StudentHomeState extends State<StudentHome> {
       ),
     );
   }
+
+  Widget joinexambutton() {
+    return InkWell(
+      onTap: () {
+        joinexam();
+      },
+      child: Container(
+        width: 100,
+        height: 40,
+        decoration: BoxDecoration(
+          color: Colors.teal,
+          borderRadius: BorderRadius.circular(30.0),
+          boxShadow: [
+            //BoxShadow(color: Colors.grey, offset: Offset(1, 2)),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'Join',
+              style: TextStyle(
+                  color: Colors.white, fontSize: 15.0, fontFamily: 'Merienda'),
+            ),
+            SizedBox(
+              width: 0.0,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget togglebutton() {
+    return InkWell(
+      onTap: () {
+        _toogle();
+      },
+      child: Container(
+        width: 150,
+        height: 40,
+        decoration: BoxDecoration(
+          color: Colors.blue,
+          borderRadius: BorderRadius.circular(30.0),
+          boxShadow: [
+            //BoxShadow(color: Colors.grey, offset: Offset(1, 2)),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              text,
+              style: TextStyle(
+                  color: Colors.white, fontSize: 15.0, fontFamily: 'Merienda'),
+            ),
+            SizedBox(
+              width: 0.0,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   TextEditingController linkcontroller = new TextEditingController();
   TextEditingController idcontroller = new TextEditingController();
-  bool link=true;
-  String text="Enter Exam ID";
-  void _toogle(){
-
+  bool link = true;
+  String text = "Enter Exam ID";
+  void _toogle() {
     setState(() {
-      if(link){
-        text="Enter Exam Link";
-        link=false;
+      if (link) {
+        text = "Enter Exam Link";
+        link = false;
+      } else {
+        text = "Enter Exam ID";
+        link = true;
       }
-      else{
-        text="Enter Exam ID";
-        link=true;
-      }
-
     });
     Navigator.of(context).pop();
     _showDialog();
   }
+
   void _showDialog() {
     final _formKey = GlobalKey<FormState>();
     showGeneralDialog(
@@ -103,8 +169,7 @@ class _StudentHomeState extends State<StudentHome> {
 //                          inputFormatters: <TextInputFormatter>[
 //                            WhitelistingTextInputFormatter.digitsOnly
 //                          ],
-                          decoration:
-                          new InputDecoration(labelText: 'Exam ID'),
+                          decoration: new InputDecoration(labelText: 'Exam ID'),
                           validator: (value) {
                             if (value.isEmpty) {
                               return 'Please enter a Exam id';
@@ -127,39 +192,41 @@ class _StudentHomeState extends State<StudentHome> {
                             return null;
                           },
                         ),
-                      )
-                      ,
+                      ),
                     ],
                   ),
                 ),
                 actions: <Widget>[
                   // usually buttons at the bottom of the dialog
-                  new FlatButton(
-                    child: new Text(text),
-                    onPressed: () async {
-                      _toogle();
-                    },
-                  ),
-                  new FlatButton(
-                    child: new Text("Join"),
-                    onPressed: () async {
-                      joinexam();
-                      if (_formKey.currentState.validate()) {
-
-                      }
-                    },
-                  ),
+                  togglebutton(),
+                  joinexambutton(),
+//                  new FlatButton(
+//                    child: new Text(text),
+//                    onPressed: () async {
+//                      _toogle();
+//                    },
+//                  ),
+//                  new FlatButton(
+//                    child: new Text("Join"),
+//                    onPressed: () async {
+//                      joinexam();
+//                      if (_formKey.currentState.validate()) {
+//
+//                      }
+//                    },
+//                  ),
                 ],
               ),
             ),
           );
         },
-        transitionDuration: Duration(milliseconds: 200),
+        transitionDuration: Duration(milliseconds: 0),
         barrierDismissible: true,
         barrierLabel: '',
         context: context,
         pageBuilder: (context, animation1, animation2) {});
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
