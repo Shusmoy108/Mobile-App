@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:onlineexamplatform/src/exam/startpage.dart';
+import 'package:onlineexamplatform/src/registration/initialpage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: must_be_immutable
 class StudentHome extends StatefulWidget {
@@ -47,6 +49,51 @@ class _StudentHomeState extends State<StudentHome> {
               'Join Exam',
               style: TextStyle(
                   color: Colors.white, fontSize: 20.0, fontFamily: 'Merienda'),
+            ),
+            SizedBox(
+              width: 0.0,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  logout() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    sp.clear();
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return InitialPage();
+        },
+      ),
+    );
+  }
+
+  Widget logoutButton() {
+    return InkWell(
+      onTap: () {
+        logout();
+      },
+      child: Container(
+        width: 100,
+        height: 40,
+        decoration: BoxDecoration(
+          color: Colors.red,
+          borderRadius: BorderRadius.circular(30.0),
+          boxShadow: [
+            //BoxShadow(color: Colors.grey, offset: Offset(1, 2)),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'Logout',
+              style: TextStyle(
+                  color: Colors.white, fontSize: 15.0, fontFamily: 'Merienda'),
             ),
             SizedBox(
               width: 0.0,
@@ -243,6 +290,7 @@ class _StudentHomeState extends State<StudentHome> {
               joinbutton(),
             ],
           ),
-        )));
+        )),
+        floatingActionButton: logoutButton());
   }
 }

@@ -80,7 +80,7 @@ class _ResultState extends State<ResultPage> {
               SizedBox(
                 height: 20,
               ),
-              answerbutton()
+             // answerbutton()
             ],
           ),
         ),

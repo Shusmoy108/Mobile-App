@@ -245,7 +245,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                     return RegisterForm();
                   },
                 ),
-                    (Route<dynamic> route) => false,
+                (Route<dynamic> route) => false,
               );
             },
             child: Text(

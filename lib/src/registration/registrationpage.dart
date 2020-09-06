@@ -76,7 +76,7 @@ class _RegisterFormState extends State<RegisterForm> {
   Widget nextbutton() {
     return InkWell(
       onTap: () {
-        print(loginFormKey.currentState.validate());
+        //print(loginFormKey.currentState.validate());
         if (loginFormKey.currentState.validate() && nameFlag) {
           setState(() {
             nameFlag = false;
@@ -115,63 +115,67 @@ class _RegisterFormState extends State<RegisterForm> {
   }
 
   Widget passwordField() {
-    return TextFormField(
-      decoration: InputDecoration(
-        labelText: 'Password *',
-        labelStyle: TextStyle(
-          color: Colors.black87,
-        ),
-        icon: Icon(
-          Icons.lock,
-          color: Colors.black87,
-        ),
-        suffix: GestureDetector(
-          onTap: toggleObscureFlag,
-          child: _shouldObscureText
-              ? Icon(FontAwesomeIcons.solidEye)
-              : Icon(FontAwesomeIcons.solidEyeSlash),
-        ),
-      ),
-      obscureText: _shouldObscureText,
-      validator: (String value) {
-        if (value.length > 5)
-          return null;
-        else
-          return 'Password is required and minimum length is six';
-      },
-      onChanged: (String value) {
-        setState(() {
-          password = value;
-        });
-      },
-    );
+    return Container(
+        width: 350,
+        child: TextFormField(
+          decoration: InputDecoration(
+            labelText: 'Password *',
+            labelStyle: TextStyle(
+              color: Colors.black87,
+            ),
+            icon: Icon(
+              Icons.lock,
+              color: Colors.black87,
+            ),
+            suffix: GestureDetector(
+              onTap: toggleObscureFlag,
+              child: _shouldObscureText
+                  ? Icon(FontAwesomeIcons.solidEye)
+                  : Icon(FontAwesomeIcons.solidEyeSlash),
+            ),
+          ),
+          obscureText: _shouldObscureText,
+          validator: (String value) {
+            if (value.length > 5)
+              return null;
+            else
+              return 'Password is required and minimum length is six';
+          },
+          onChanged: (String value) {
+            setState(() {
+              password = value;
+            });
+          },
+        ));
   }
 
   Widget nameField() {
-    return TextFormField(
-      decoration: InputDecoration(
-        labelText: 'Full Name *',
-        hintText: 'John Dee',
-        icon: Icon(
-          Icons.person,
-          color: Colors.black87,
-        ),
-        labelStyle: TextStyle(
-          color: Colors.black87,
-        ),
-      ),
-      autovalidate: _autovalidateLoginform,
-      validator: (String value) {
-        if (value.length > 1)
-          return null;
-        else
-          return 'Full name is required.';
-      },
-      onChanged: (String value) {
-        setState(() {
-          name = value;
-        });
-      },
-    );
+    return Container(
+        width: 350,
+        child: TextFormField(
+          decoration: InputDecoration(
+            labelText: 'Full Name *',
+            hintText: 'John Dee',
+            icon: Icon(
+              Icons.person,
+              color: Colors.black87,
+            ),
+            labelStyle: TextStyle(
+              color: Colors.black87,
+            ),
+          ),
+          autovalidate: _autovalidateLoginform,
+          validator: (String value) {
+            if (value.length > 1)
+              return null;
+            else
+              return 'Full name is required.';
+          },
+          onChanged: (String value) {
+            setState(() {
+              name = value;
+            });
+          },
+        ));
   }
 }

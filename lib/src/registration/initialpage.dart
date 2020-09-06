@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:onlineexamplatform/src/home/studenthome.dart';
 import 'package:onlineexamplatform/src/registration/otppage.dart';
+import 'package:onlineexamplatform/src/registration/otppagenew.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class InitialPage extends StatefulWidget {
@@ -22,8 +23,8 @@ class _InitialFormState extends State<InitialPage> {
   }
 
   void login() {
-    print(password);
-    print(mobileNumber);
+//    print(password);
+//    print(mobileNumber);
     if (mobileNumber == "01819648302" && password == "123456") {
       saveAuthData(true, mobileNumber);
       Navigator.of(context).pushReplacement(
@@ -51,7 +52,7 @@ class _InitialFormState extends State<InitialPage> {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (BuildContext context) {
-            return OTPPage();
+            return OtpPage();
           },
         ),
       );
@@ -194,64 +195,69 @@ class _InitialFormState extends State<InitialPage> {
   }
 
   Widget passwordField() {
-    return TextFormField(
-      decoration: InputDecoration(
-        labelText: 'Password *',
-        labelStyle: TextStyle(
-          color: Colors.black87,
-        ),
-        icon: Icon(
-          Icons.lock,
-          color: Colors.black87,
-        ),
-        suffix: GestureDetector(
-          onTap: toggleObscureFlag,
-          child: _shouldObscureText
-              ? Icon(FontAwesomeIcons.solidEye)
-              : Icon(FontAwesomeIcons.solidEyeSlash),
-        ),
-      ),
-      obscureText: _shouldObscureText,
-      validator: (String value) {
-        if (value.length > 6)
-          return null;
-        else
-          return 'Password is required and minimum length is six';
-      },
-      onChanged: (String value) {
-        setState(() {
-          password = value;
-        });
-      },
-    );
+    return Container(
+        width: 350,
+        child: TextFormField(
+          decoration: InputDecoration(
+            labelText: 'Password *',
+            labelStyle: TextStyle(
+              color: Colors.black87,
+            ),
+            icon: Icon(
+              Icons.lock,
+              color: Colors.black87,
+            ),
+            suffix: GestureDetector(
+              onTap: toggleObscureFlag,
+              child: _shouldObscureText
+                  ? Icon(FontAwesomeIcons.solidEye)
+                  : Icon(FontAwesomeIcons.solidEyeSlash),
+            ),
+          ),
+          obscureText: _shouldObscureText,
+          validator: (String value) {
+            if (value.length > 6)
+              return null;
+            else
+              return 'Password is required and minimum length is six';
+          },
+          onChanged: (String value) {
+            setState(() {
+              password = value;
+            });
+          },
+        ));
   }
 
   Widget mobileField() {
-    return TextFormField(
-      decoration: InputDecoration(
-        labelText: 'Mobile Number *',
-        hintText: '01810000003',
-        icon: Icon(
-          Icons.phone,
-          color: Colors.black87,
+    return Container(
+      width: 350,
+      child: TextFormField(
+        decoration: InputDecoration(
+          labelText: 'Mobile Number *',
+          hintText: '01810000003',
+          icon: Icon(
+            Icons.phone,
+            color: Colors.black87,
+          ),
+          labelStyle: TextStyle(
+            color: Colors.black87,
+          ),
         ),
-        labelStyle: TextStyle(
-          color: Colors.black87,
-        ),
+        keyboardType: TextInputType.number,
+        autovalidate: _autovalidateLoginform,
+        validator: (String value) {
+          if (isNumeric(value) && value.length == 11)
+            return null;
+          else
+            return 'Mobile number is invalid';
+        },
+        onChanged: (String value) {
+          setState(() {
+            mobileNumber = value;
+          });
+        },
       ),
-      keyboardType: TextInputType.number,
-      autovalidate: _autovalidateLoginform,
-      validator: (String value) {
-        if (isNumeric(value) && value.length == 11)
-          return null;
-        else
-          return 'Mobile number is invalid';
-      },
-      onChanged: (String value) {
-        setState(() {
-          mobileNumber = value;
-        });
-      },
     );
   }
 }
