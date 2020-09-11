@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:onlineexamplatform/src/exam/startpage.dart';
+import 'package:onlineexamplatform/src/achievement/achievement.dart';
+import 'package:onlineexamplatform/src/classroom/classroom.dart';
+import 'package:onlineexamplatform/src/exam/calender.dart';
 import 'package:onlineexamplatform/src/registration/initialpage.dart';
+import 'package:onlineexamplatform/src/settings/setting.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: must_be_immutable
@@ -15,15 +18,17 @@ class StudentHome extends StatefulWidget {
 class _StudentHomeState extends State<StudentHome> {
   String mobile;
   _StudentHomeState(this.mobile);
+  int _selectedIndex = 0;
+  var pages = [
+    ClassroomPage(),
+    Calender(),
+    //ExamlistPage(),
+    AchievementPage(),
+    SettingsPage()
+  ];
   void joinexam() {
+    classroom.add({"name": idcontroller.toString(), "teacher": "sakhawat"});
     Navigator.of(context).pop();
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (BuildContext context) {
-          return StartPage();
-        },
-      ),
-    );
   }
 
   Widget joinbutton() {
@@ -35,7 +40,7 @@ class _StudentHomeState extends State<StudentHome> {
         width: 200,
         height: 40,
         decoration: BoxDecoration(
-          color: Colors.blue,
+          color: Colors.teal,
           borderRadius: BorderRadius.circular(30.0),
           boxShadow: [
             //BoxShadow(color: Colors.grey, offset: Offset(1, 2)),
@@ -46,7 +51,7 @@ class _StudentHomeState extends State<StudentHome> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Join Exam',
+              'Join Classroom',
               style: TextStyle(
                   color: Colors.white, fontSize: 20.0, fontFamily: 'Merienda'),
             ),
@@ -137,55 +142,14 @@ class _StudentHomeState extends State<StudentHome> {
     );
   }
 
-  Widget togglebutton() {
-    return InkWell(
-      onTap: () {
-        _toogle();
-      },
-      child: Container(
-        width: 150,
-        height: 40,
-        decoration: BoxDecoration(
-          color: Colors.blue,
-          borderRadius: BorderRadius.circular(30.0),
-          boxShadow: [
-            //BoxShadow(color: Colors.grey, offset: Offset(1, 2)),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              text,
-              style: TextStyle(
-                  color: Colors.white, fontSize: 15.0, fontFamily: 'Merienda'),
-            ),
-            SizedBox(
-              width: 0.0,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  TextEditingController linkcontroller = new TextEditingController();
   TextEditingController idcontroller = new TextEditingController();
-  bool link = true;
-  String text = "Enter Exam ID";
-  void _toogle() {
-    setState(() {
-      if (link) {
-        text = "Enter Exam Link";
-        link = false;
-      } else {
-        text = "Enter Exam ID";
-        link = true;
-      }
-    });
-    Navigator.of(context).pop();
-    _showDialog();
+
+  Widget floatButton() {
+    if (_selectedIndex == 0) {
+      return joinbutton();
+    } else if (_selectedIndex == 3) {
+      return logoutButton();
+    }
   }
 
   void _showDialog() {
@@ -208,72 +172,48 @@ class _StudentHomeState extends State<StudentHome> {
                     direction: Axis.horizontal,
                     spacing: 5,
                     children: <Widget>[
-                      Visibility(
-                        visible: !link,
-                        child: TextFormField(
-                          controller: idcontroller,
-                          //keyboardType: TextInputType.number,
-//                          inputFormatters: <TextInputFormatter>[
-//                            WhitelistingTextInputFormatter.digitsOnly
-//                          ],
-                          decoration: new InputDecoration(labelText: 'Exam ID'),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Please enter a Exam id';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                      Visibility(
-                        visible: link,
-                        child: TextFormField(
-                          controller: linkcontroller,
-                          decoration: new InputDecoration(
-                              labelText: 'Exam Link',
-                              hintText: 'eg. https://www.google.com/'),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Please enter a Exam Link';
-                            }
-                            return null;
-                          },
-                        ),
+                      TextFormField(
+                        controller: idcontroller,
+                        decoration:
+                            new InputDecoration(labelText: 'Classroom code'),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter a Classroom code';
+                          }
+                          return null;
+                        },
                       ),
                     ],
                   ),
                 ),
                 actions: <Widget>[
                   // usually buttons at the bottom of the dialog
-                  togglebutton(),
+
                   joinexambutton(),
-//                  new FlatButton(
-//                    child: new Text(text),
-//                    onPressed: () async {
-//                      _toogle();
-//                    },
-//                  ),
-//                  new FlatButton(
-//                    child: new Text("Join"),
-//                    onPressed: () async {
-//                      joinexam();
-//                      if (_formKey.currentState.validate()) {
-//
-//                      }
-//                    },
-//                  ),
                 ],
               ),
             ),
           );
         },
-        transitionDuration: Duration(milliseconds: 0),
+        transitionDuration: Duration(milliseconds: 200),
         barrierDismissible: true,
         barrierLabel: '',
         context: context,
         pageBuilder: (context, animation1, animation2) {});
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  var classroom = [
+    {"name": "Physics", "teacher": "Prottoy"},
+    {"name": "Math", "teacher": "Prottoy"},
+    {"name": "Chemistry", "teacher": "Prottoy"},
+    {"name": "Bangla", "teacher": "Prottoy"}
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -281,16 +221,33 @@ class _StudentHomeState extends State<StudentHome> {
             centerTitle: true,
             backgroundColor: Colors.teal,
             title: Text("Quiz Master")),
-        body: Container(
-            child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              joinbutton(),
-            ],
-          ),
-        )),
-        floatingActionButton: logoutButton());
+        body: pages[_selectedIndex],
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Colors.teal,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.class_),
+              title: Text('Classroom'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today),
+              title: Text('Calender'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.stars),
+              title: Text('Achievement'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              title: Text('Settings'),
+            ),
+          ],
+          unselectedItemColor: Colors.white,
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.amber[800],
+          onTap: _onItemTapped,
+        ),
+        floatingActionButton: floatButton());
   }
 }

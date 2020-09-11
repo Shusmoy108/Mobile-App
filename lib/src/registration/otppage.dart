@@ -26,13 +26,6 @@ class _OTPState extends State<OTPPage> {
     } else {
       err = "Incorrect OTP";
     }
-//    Navigator.of(context).pushReplacement(
-//      MaterialPageRoute(
-//        builder: (BuildContext context) {
-//          return StudentHome("as");
-//        },
-//      ),
-//    );
   }
 
   @override

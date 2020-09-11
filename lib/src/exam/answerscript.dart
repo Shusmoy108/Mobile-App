@@ -68,7 +68,7 @@ class _AnswerPageState extends State<AnswerPage> {
   Widget build(BuildContext context) {
     List<Widget> widgets = [];
     for (int i = 0; i < exam.length; i++) {
-      widgets.add(questionanswer(exam[i]['question'], answers[i]));
+      widgets.add(questionanswer(exam[i]['question'], ""));
       widgets.add(SizedBox(
         height: 10,
       ));
