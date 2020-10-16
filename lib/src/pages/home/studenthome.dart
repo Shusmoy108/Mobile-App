@@ -201,13 +201,46 @@ class _StudentHomeState extends State<StudentHome> {
         context: context,
         pageBuilder: (context, animation1, animation2) {});
   }
-
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
-
+  final snackBar = SnackBar(
+    content: InkWell(
+      onTap: () {
+ // _showDialog();
+},
+child: Container(
+width: 200,
+height: 40,
+decoration: BoxDecoration(
+color: Colors.teal,
+borderRadius: BorderRadius.circular(30.0),
+boxShadow: [
+//BoxShadow(color: Colors.grey, offset: Offset(1, 2)),
+],
+),
+child: Row(
+mainAxisAlignment: MainAxisAlignment.center,
+crossAxisAlignment: CrossAxisAlignment.center,
+children: <Widget>[
+Text(
+'Join Classroom',
+style: TextStyle(
+color: Colors.white, fontSize: 20.0, fontFamily: 'Merienda'),
+),
+SizedBox(
+width: 0.0,
+),
+],
+),
+),
+),
+    //backgroundColor: Colors.red,
+    duration: Duration(seconds: 3),
+  );
   var classroom = [
     {"name": "Physics", "teacher": "Prottoy"},
     {"name": "Math", "teacher": "Prottoy"},
@@ -217,10 +250,18 @@ class _StudentHomeState extends State<StudentHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
             centerTitle: true,
             backgroundColor: Colors.teal,
-            title: Text("Quiz Master")),
+
+            title: Text("Quiz Master"),
+            actions: <Widget>[
+              IconButton(icon: Icon(Icons.add),onPressed: (){
+                _scaffoldKey.currentState.showSnackBar(snackBar);
+              },)
+          ],
+        ),
         body: pages[_selectedIndex],
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,

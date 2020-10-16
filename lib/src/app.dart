@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:onlineexamplatform/src/home/studenthome.dart';
-import 'package:onlineexamplatform/src/registration/initialpage.dart';
+import 'package:onlineexamplatform/src/pages/home/studenthome.dart';
+import 'package:onlineexamplatform/src/pages/registration/initialpage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class App extends StatelessWidget {

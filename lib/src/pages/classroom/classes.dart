@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:onlineexamplatform/src/classroom/currentexam.dart';
-import 'package:onlineexamplatform/src/classroom/previousexam.dart';
-import 'package:onlineexamplatform/src/exam/exampage.dart';
+import 'package:onlineexamplatform/src/pages/classroom/currentexam.dart';
+import 'package:onlineexamplatform/src/pages/classroom/previousexam.dart';
+import 'package:onlineexamplatform/src/pages/exam/exampage.dart';
 
 class Classes extends StatefulWidget {
   String classname;

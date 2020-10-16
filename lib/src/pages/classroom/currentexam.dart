@@ -1,33 +1,64 @@
 import 'package:flutter/material.dart';
-import 'package:onlineexamplatform/src/exam/answerscript.dart';
-import 'package:onlineexamplatform/src/exam/exampage.dart';
+import 'package:onlineexamplatform/src/pages/exam/exampage.dart';
+import 'package:onlineexamplatform/src/pages/exam/startpage.dart';
 
-class PreviousExam extends StatefulWidget {
+class CurrentExam extends StatefulWidget {
   @override
-  _PreviousExamState createState() => _PreviousExamState();
+  _CurrentExamState createState() => _CurrentExamState();
 }
 
-class _PreviousExamState extends State<PreviousExam> {
-  Widget previousexam(int index, String examname, String teacher, bool ans) {
-    String answer = "";
+class _CurrentExamState extends State<CurrentExam> {
+  void joinexam() {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return StartPage();
+        },
+      ),
+    );
+  }
+
+  Widget startbutton() {
+    return InkWell(
+      onTap: () {
+        joinexam();
+      },
+      child: Container(
+        width: 70,
+        height: 30,
+        decoration: BoxDecoration(
+          color: Colors.teal,
+          borderRadius: BorderRadius.circular(30.0),
+          boxShadow: [
+            //BoxShadow(color: Colors.grey, offset: Offset(1, 2)),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'Start',
+              style: TextStyle(
+                  color: Colors.white, fontSize: 15.0, fontFamily: 'Merienda'),
+            ),
+            SizedBox(
+              width: 0.0,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget currentExam(int index, String examname, String teacher, bool ans) {
+    String answer = "Tap to start the exam";
     teacher = "conducted by " + teacher;
 
-    if (index % 3 == 0) {
-      answer =
-          "Answer Script is available of this exam. Tap to see the answer script";
-    }
     return new ListTile(
       onTap: () {
         print("tapped");
-        if (index % 3 == 0) {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (BuildContext context) {
-                return AnswerPage([]);
-              },
-            ),
-          );
-        }
+        joinexam();
       },
       title: new Column(
         children: <Widget>[
@@ -83,7 +114,7 @@ class _PreviousExamState extends State<PreviousExam> {
                         fontSize: 12.0,
                         color: Colors.black54,
                         fontWeight: FontWeight.normal),
-                  )
+                  ),
                 ],
               )),
             ],
@@ -96,7 +127,7 @@ class _PreviousExamState extends State<PreviousExam> {
 
   Widget build(BuildContext context) {
     return Container(child: ListView.builder(itemBuilder: (context, index) {
-      return previousexam(index + 1, "Physics", "Prottoy", true);
+      return currentExam(index + 1, "Physics", "Prottoy", true);
     }));
   }
 }

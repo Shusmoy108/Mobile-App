@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:onlineexamplatform/src/classroom/classes.dart';
-import 'package:onlineexamplatform/src/exam/exampage.dart';
+import 'package:onlineexamplatform/src/pages/classroom/classes.dart';
+import 'package:onlineexamplatform/src/pages/exam/exampage.dart';
 
 class ClassroomPage extends StatefulWidget {
   @override
