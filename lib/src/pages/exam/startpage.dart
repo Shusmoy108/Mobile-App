@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:onlineexamplatform/src/exam/exampage.dart';
+import 'package:onlineexamplatform/src/pages/exam/exampage.dart';
 
 class StartPage extends StatefulWidget {
   @override

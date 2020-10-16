@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:onlineexamplatform/src/achievement/achievement.dart';
-import 'package:onlineexamplatform/src/classroom/classroom.dart';
-import 'package:onlineexamplatform/src/exam/calender.dart';
-import 'package:onlineexamplatform/src/registration/initialpage.dart';
-import 'package:onlineexamplatform/src/settings/setting.dart';
+import 'package:onlineexamplatform/src/pages/achievement/achievement.dart';
+import 'package:onlineexamplatform/src/pages/classroom/classroom.dart';
+import 'package:onlineexamplatform/src/pages/exam/calender.dart';
+import 'package:onlineexamplatform/src/pages/registration/initialpage.dart';
+import 'package:onlineexamplatform/src/pages/settings/setting.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: must_be_immutable

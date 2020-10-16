@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:numeric_keyboard/numeric_keyboard.dart';
-import 'package:onlineexamplatform/src/registration/registrationpage.dart';
+import 'package:onlineexamplatform/src/pages/registration/registrationpage.dart';
 
 class OtpPage extends StatefulWidget {
   const OtpPage({Key key}) : super(key: key);

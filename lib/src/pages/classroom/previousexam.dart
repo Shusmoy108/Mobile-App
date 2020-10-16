@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:onlineexamplatform/src/exam/pages/answerscript.dart';
-import 'package:onlineexamplatform/src/exam/exampage.dart';
+import 'package:onlineexamplatform/src/pages/exam/answerscript.dart';
+import 'package:onlineexamplatform/src/pages/exam/exampage.dart';
 
 class PreviousExam extends StatefulWidget {
   @override

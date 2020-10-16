@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:onlineexamplatform/src/registration/registrationpage.dart';
+import 'package:onlineexamplatform/src/pages/registration/registrationpage.dart';
 
 class OTPPage extends StatefulWidget {
   @override

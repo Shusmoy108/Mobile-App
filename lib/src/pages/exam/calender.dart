@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:onlineexamplatform/src/exam/answerscript.dart';
-import 'package:onlineexamplatform/src/exam/exampage.dart';
-import 'package:onlineexamplatform/src/exam/resultpage.dart';
-import 'package:onlineexamplatform/src/exam/startpage.dart';
+import 'package:onlineexamplatform/src/pages/exam/answerscript.dart';
+import 'package:onlineexamplatform/src/pages/exam/exampage.dart';
+import 'package:onlineexamplatform/src/pages/exam/resultpage.dart';
+import 'package:onlineexamplatform/src/pages/exam/startpage.dart';
 
 class Calender extends StatefulWidget {
   @override

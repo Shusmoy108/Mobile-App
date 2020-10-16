@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:onlineexamplatform/src/exam/answerscript.dart';
-import 'package:onlineexamplatform/src/home/studenthome.dart';
+import 'package:onlineexamplatform/src/pages/exam/answerscript.dart';
+import 'package:onlineexamplatform/src/pages/home/studenthome.dart';
 
 // ignore: must_be_immutable
 class ResultPage extends StatefulWidget {

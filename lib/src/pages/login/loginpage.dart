@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:onlineexamplatform/src/home/studenthome.dart';
-import 'package:onlineexamplatform/src/registration/registrationpage.dart';
+import 'package:onlineexamplatform/src/pages/home/studenthome.dart';
+import 'package:onlineexamplatform/src/pages/registration/registrationpage.dart';
 
 class LoginPage extends StatefulWidget {
   @override

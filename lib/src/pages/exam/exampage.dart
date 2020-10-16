@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:onlineexamplatform/src/exam/resultpage.dart';
+import 'package:onlineexamplatform/src/pages/exam/resultpage.dart';
 
-import 'package:onlineexamplatform/src/exam/timer.dart';
+import 'package:onlineexamplatform/src/pages/exam/timer.dart';
 
 class ExamPage extends StatefulWidget {
   @override
