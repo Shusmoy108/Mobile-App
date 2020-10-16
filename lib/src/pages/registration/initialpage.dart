@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/services.dart';
+import 'package:onlineexamplatform/src/apicalls/classroomapi.dart';
+import 'package:onlineexamplatform/src/models/classrooms.dart';
 import 'package:onlineexamplatform/src/pages/home/studenthome.dart';
 import 'package:onlineexamplatform/src/pages/registration/otppage.dart';
 import 'package:onlineexamplatform/src/pages/registration/otppagenew.dart';
@@ -22,15 +24,17 @@ class _InitialFormState extends State<InitialPage> {
     sp.setString("mobile", mobile);
   }
 
-  void login() {
+  void login() async {
 //    print(password);
 //    print(mobileNumber);
     if (mobileNumber == "01819648302" && password == "123456") {
       saveAuthData(true, mobileNumber);
+      ClassroomApi classroomApi= new ClassroomApi();
+      List<Classroom> classrooms=  await classroomApi.getClassrooms("userid");
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (BuildContext context) {
-            return StudentHome(mobileNumber);
+            return StudentHome(classrooms);
           },
         ),
       );

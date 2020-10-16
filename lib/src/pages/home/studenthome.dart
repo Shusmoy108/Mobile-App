@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:onlineexamplatform/src/apicalls/classroomapi.dart';
+import 'package:onlineexamplatform/src/models/classrooms.dart';
 import 'package:onlineexamplatform/src/pages/achievement/achievement.dart';
 import 'package:onlineexamplatform/src/pages/classroom/classroom.dart';
 import 'package:onlineexamplatform/src/pages/exam/calender.dart';
@@ -8,29 +10,33 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: must_be_immutable
 class StudentHome extends StatefulWidget {
-  String mobile;
-  StudentHome(this.mobile);
+  List<Classroom> classrooms;
+  StudentHome(this.classrooms);
 
   @override
-  _StudentHomeState createState() => _StudentHomeState(mobile);
+  _StudentHomeState createState() => _StudentHomeState(classrooms);
 }
 
 class _StudentHomeState extends State<StudentHome> {
   String mobile;
-  _StudentHomeState(this.mobile);
+  _StudentHomeState(this.classrooms);
+  List<Classroom> classrooms;
   int _selectedIndex = 0;
   var pages = [
-    ClassroomPage(),
-    Calender(),
-    //ExamlistPage(),
-    AchievementPage(),
-    SettingsPage()
+
   ];
   void joinexam() {
-    classroom.add({"name": idcontroller.toString(), "teacher": "sakhawat"});
     Navigator.of(context).pop();
   }
 
+
+  void initState() {
+ pages=[   ClassroomPage(classrooms),
+   Calender(),
+   //ExamlistPage(),
+   AchievementPage(),
+   SettingsPage()];
+  }
   Widget joinbutton() {
     return InkWell(
       onTap: () {
@@ -241,12 +247,7 @@ width: 0.0,
     //backgroundColor: Colors.red,
     duration: Duration(seconds: 3),
   );
-  var classroom = [
-    {"name": "Physics", "teacher": "Prottoy"},
-    {"name": "Math", "teacher": "Prottoy"},
-    {"name": "Chemistry", "teacher": "Prottoy"},
-    {"name": "Bangla", "teacher": "Prottoy"}
-  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -289,6 +290,6 @@ width: 0.0,
           selectedItemColor: Colors.amber[800],
           onTap: _onItemTapped,
         ),
-        floatingActionButton: floatButton());
+        );
   }
 }

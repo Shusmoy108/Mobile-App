@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:onlineexamplatform/src/apicalls/classroomapi.dart';
+import 'package:onlineexamplatform/src/models/classrooms.dart';
 import 'package:onlineexamplatform/src/pages/exam/answerscript.dart';
 import 'package:onlineexamplatform/src/pages/home/studenthome.dart';
 
@@ -13,11 +15,13 @@ class ResultPage extends StatefulWidget {
 class _ResultState extends State<ResultPage> {
   List<String> answers;
   _ResultState(this.answers);
-  void exam() {
+  void exam()async {
+    ClassroomApi classroomApi= new ClassroomApi();
+    List<Classroom> classrooms=  await classroomApi.getClassrooms("userid");
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (BuildContext context) {
-          return StudentHome("");
+          return StudentHome(classrooms);
         },
       ),
     );

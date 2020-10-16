@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:onlineexamplatform/src/models/classrooms.dart';
 import 'package:onlineexamplatform/src/pages/classroom/classes.dart';
-import 'package:onlineexamplatform/src/pages/exam/exampage.dart';
 
 class ClassroomPage extends StatefulWidget {
+  List<Classroom> classrooms;
+  ClassroomPage(this.classrooms);
   @override
-  _ClassroomState createState() => _ClassroomState();
+  _ClassroomState createState() => _ClassroomState(this.classrooms);
 }
 
 class _ClassroomState extends State<ClassroomPage> {
+  List<Classroom> classrooms;
+  _ClassroomState(this.classrooms);
   @override
-  Widget classroom(int i, String classname, String teacher){
+  Widget classroom(int i, String classname, String teacher,String examNumber){
     teacher= "conducted by "+teacher;
     return Center(
       child: Card(
@@ -29,6 +33,7 @@ class _ClassroomState extends State<ClassroomPage> {
             leading: Text(i.toString(),style: TextStyle(fontSize: 20),),
             title: Text(classname),
             subtitle: Text(teacher),
+            trailing: Text(examNumber),
           ),
         ),
       ),
@@ -36,13 +41,13 @@ class _ClassroomState extends State<ClassroomPage> {
   }
   Widget build(BuildContext context) {
     return Container(
-      child: ListView(
-        children: <Widget>[
-          classroom(1,"Chemistry","Prottoy"),
-          classroom(2,"Physics","Prottoy"),
-          classroom(3,"Mathematics","Prottoy"),
-        ],
-      ),
+      child:  new ListView.builder
+        (
+          itemCount: classrooms.length,
+          itemBuilder: (BuildContext ctxt, int index) {
+            return  classroom(index+1,classrooms[index].roomName,classrooms[index].roomCreator,classrooms[index].roomExam);
+          }
+      )
     );
   }
 }

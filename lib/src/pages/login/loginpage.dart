@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:onlineexamplatform/src/apicalls/classroomapi.dart';
+import 'package:onlineexamplatform/src/models/classrooms.dart';
 import 'package:onlineexamplatform/src/pages/home/studenthome.dart';
 import 'package:onlineexamplatform/src/pages/registration/registrationpage.dart';
 
@@ -22,11 +24,13 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     });
   }
 
-  void login() {
+  void login() async{
+    ClassroomApi classroomApi= new ClassroomApi();
+    List<Classroom> classrooms=  await classroomApi.getClassrooms("userid");
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (BuildContext context) {
-          return StudentHome("as");
+          return StudentHome(classrooms);
         },
       ),
     );
