@@ -8,11 +8,11 @@ import 'models/classrooms.dart';
 
 class App extends StatelessWidget {
   // This widget is the root of your application.
-  List<Classroom> classrooms;
+  List<Classroom>  classes;
   Future<bool> loadAuthData() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
     ClassroomApi classroomApi= new ClassroomApi();
-    classrooms=  await classroomApi.getClassrooms("k12");
+    classes=  await classroomApi.getClassrooms("12");
     return sp.getBool('auth');
   }
 
@@ -26,7 +26,7 @@ class App extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data) {
-              return StudentHome(classrooms);
+              return StudentHome(classes);
             } else {
               return InitialPage();
             }

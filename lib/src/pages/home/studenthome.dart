@@ -10,33 +10,36 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: must_be_immutable
 class StudentHome extends StatefulWidget {
-  List<Classroom> classrooms;
-  StudentHome(this.classrooms);
-
+  StudentHome(this.classes);
+  List<Classroom>  classes;
   @override
-  _StudentHomeState createState() => _StudentHomeState(classrooms);
+  _StudentHomeState createState() => _StudentHomeState(classes);
 }
 
 class _StudentHomeState extends State<StudentHome> {
   String mobile;
-  _StudentHomeState(this.classrooms);
-  List<Classroom> classrooms;
+  _StudentHomeState(this.classes);
+  List<Classroom>  classes;
   int _selectedIndex = 0;
-  var pages = [
+  var pages = [];
 
-  ];
-  void joinexam() {
-    Navigator.of(context).pop();
+  void initState(){
+    pages=[
+      ClassroomPage(classes),
+      Calender(),
+      //ExamlistPage(),
+      AchievementPage(),
+      SettingsPage()
+    ];
+  }
+  void joinexam () async{
+    ClassroomApi classroomApi= new ClassroomApi();
+    bool sc = await classroomApi.joinClasses(classCodecontroller.text, classCodecontroller.text);
+    print(sc);
+    if(sc)
+      Navigator.of(context).pop();
   }
 
-
-  void initState() {
- pages=[   ClassroomPage(classrooms),
-   Calender(),
-   //ExamlistPage(),
-   AchievementPage(),
-   SettingsPage()];
-  }
   Widget joinbutton() {
     return InkWell(
       onTap: () {
@@ -148,7 +151,7 @@ class _StudentHomeState extends State<StudentHome> {
     );
   }
 
-  TextEditingController idcontroller = new TextEditingController();
+  TextEditingController classCodecontroller = new TextEditingController();
 
   Widget floatButton() {
     if (_selectedIndex == 0) {
@@ -158,7 +161,7 @@ class _StudentHomeState extends State<StudentHome> {
     }
   }
 
-  void _showDialog() {
+   void  _showDialog() {
     final _formKey = GlobalKey<FormState>();
     showGeneralDialog(
         barrierColor: Colors.black.withOpacity(0.5),
@@ -179,7 +182,7 @@ class _StudentHomeState extends State<StudentHome> {
                     spacing: 5,
                     children: <Widget>[
                       TextFormField(
-                        controller: idcontroller,
+                        controller: classCodecontroller,
                         decoration:
                             new InputDecoration(labelText: 'Classroom code'),
                         validator: (value) {
@@ -207,49 +210,51 @@ class _StudentHomeState extends State<StudentHome> {
         context: context,
         pageBuilder: (context, animation1, animation2) {});
   }
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
-  final snackBar = SnackBar(
-    content: InkWell(
-      onTap: () {
- // _showDialog();
-},
-child: Container(
-width: 200,
-height: 40,
-decoration: BoxDecoration(
-color: Colors.teal,
-borderRadius: BorderRadius.circular(30.0),
-boxShadow: [
-//BoxShadow(color: Colors.grey, offset: Offset(1, 2)),
-],
-),
-child: Row(
-mainAxisAlignment: MainAxisAlignment.center,
-crossAxisAlignment: CrossAxisAlignment.center,
-children: <Widget>[
-Text(
-'Join Classroom',
-style: TextStyle(
-color: Colors.white, fontSize: 20.0, fontFamily: 'Merienda'),
-),
-SizedBox(
-width: 0.0,
-),
-],
-),
-),
-),
-    //backgroundColor: Colors.red,
-    duration: Duration(seconds: 3),
-  );
 
   @override
   Widget build(BuildContext context) {
+    var snackBar = SnackBar(
+
+      content: InkWell(
+        onTap: () {
+          _showDialog();
+        },
+        child: Container(
+          width: 200,
+          height: 40,
+          decoration: BoxDecoration(
+            color: Colors.teal,
+            borderRadius: BorderRadius.circular(30.0),
+            boxShadow: [
+//BoxShadow(color: Colors.grey, offset: Offset(1, 2)),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'Join Classroom',
+                style: TextStyle(
+                    color: Colors.white, fontSize: 20.0, fontFamily: 'Merienda'),
+              ),
+              SizedBox(
+                width: 0.0,
+              ),
+            ],
+          ),
+        ),
+      ),
+      //backgroundColor: Colors.red,
+      duration: Duration(seconds: 3),
+    );
+
     return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
