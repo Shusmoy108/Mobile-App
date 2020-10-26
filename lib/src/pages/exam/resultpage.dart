@@ -1,27 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:onlineexamplatform/src/apicalls/classroomapi.dart';
 import 'package:onlineexamplatform/src/models/classrooms.dart';
+import 'package:onlineexamplatform/src/models/exams.dart';
 import 'package:onlineexamplatform/src/pages/exam/answerscript.dart';
 import 'package:onlineexamplatform/src/pages/home/studenthome.dart';
 
 // ignore: must_be_immutable
 class ResultPage extends StatefulWidget {
   List<String> answers;
-  ResultPage(this.answers);
+  ResultPage();
   @override
-  _ResultState createState() => _ResultState(answers);
+  _ResultState createState() => _ResultState();
 }
 
 class _ResultState extends State<ResultPage> {
   List<String> answers;
-  _ResultState(this.answers);
-  void exam()async {
-    ClassroomApi classroomApi= new ClassroomApi();
-    List<Classroom> classrooms=  await classroomApi.getClassrooms("userid");
+  _ResultState();
+  void exam() async {
+    ClassroomApi classroomApi = new ClassroomApi();
+    List<Classroom> classrooms = await classroomApi.getClassrooms("12");
+    var exams = await classroomApi.getClassroomExams("12");
+//    if(res!=null){
+    //var exams = jsonDecode(res);
+    List<Exam> currentExams = new List();
+    for (var e in exams['currentExam']) {
+      Exam er = new Exam(e["_id"], e["examName"], e["examInstruction"],
+          e["examSubject"], e["examCreator"], e["examTime"], e["examMarks"]);
+      er.examStart = e["examStart"];
+      er.examDuration = e["examDuration"];
+      currentExams.add(er);
+    }
+    List<Exam> previousExams = new List();
+    for (var e in exams['previousExam']) {
+      Exam er = new Exam(e["_id"], e["examName"], e["examInstruction"],
+          e["examSubject"], e["examCreator"], e["examTime"], e["examMarks"]);
+      er.examAnswerAvailable = e["examAnswerAvailable"];
+      er.examDuration = e["examDuration"];
+      previousExams.add(er);
+    }
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (BuildContext context) {
-          return StudentHome(classrooms);
+          return StudentHome(classrooms, currentExams, previousExams);
         },
       ),
     );
@@ -31,7 +51,7 @@ class _ResultState extends State<ResultPage> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (BuildContext context) {
-          return AnswerPage(answers);
+          //return AnswerPage(answers);
         },
       ),
     );
@@ -84,7 +104,7 @@ class _ResultState extends State<ResultPage> {
               SizedBox(
                 height: 20,
               ),
-             // answerbutton()
+              // answerbutton()
             ],
           ),
         ),

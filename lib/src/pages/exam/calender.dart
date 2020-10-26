@@ -1,230 +1,314 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:onlineexamplatform/src/apicalls/examapi.dart';
+import 'package:onlineexamplatform/src/models/exams.dart';
+import 'package:onlineexamplatform/src/models/questions.dart';
 import 'package:onlineexamplatform/src/pages/exam/answerscript.dart';
 import 'package:onlineexamplatform/src/pages/exam/exampage.dart';
 import 'package:onlineexamplatform/src/pages/exam/resultpage.dart';
 import 'package:onlineexamplatform/src/pages/exam/startpage.dart';
+import 'package:intl/intl.dart';
 
 class Calender extends StatefulWidget {
+  List<Exam> currentExams, previouExam;
+  Calender(this.currentExams, this.previouExam);
   @override
-  _CalenderState createState() => _CalenderState();
+  _CalenderState createState() => _CalenderState(currentExams, previouExam);
 }
 
 class _CalenderState extends State<Calender> {
-  List<String> items = [
-    "Item 1",
-    "Item 2",
-    "Item 3",
-    "Item 4",
-    "Item 5",
-    "Item 6",
-    "Item 7",
-    "Item 8"
-  ];
-  void joinexam() {
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (BuildContext context) {
-          return StartPage();
-        },
-      ),
-    );
+  List<Exam> currentExams, previousExam;
+  _CalenderState(this.currentExams, this.previousExam);
+  void joinexam(int i) async {
+    ExamApi examApi = new ExamApi();
+    List<Question> questions = await examApi.getQuestions("12");
+    setState(() {
+      currentExams[i].examQuestions = questions;
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (BuildContext context) {
+            return StartPage(currentExams[i]);
+          },
+        ),
+      );
+    });
   }
-
-  Widget startbutton() {
+  void showAnswer(int i) async {
+    ExamApi examApi = new ExamApi();
+    List<Question> questions = await examApi.getAnswers("12");
+    setState(() {
+      previousExam[i].examQuestions = questions;
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (BuildContext context) {
+            return AnswerPage(previousExam[i]);
+          },
+        ),
+      );
+    });
+  }
+  Widget OngoingExam(int index, Exam e) {
+    String teacher = "conducted by " + e.examCreator;
+    var date = new DateTime.fromMicrosecondsSinceEpoch(e.examTime);
+    var formattedDate = DateFormat.yMd().add_jm().format(date);
+    String answer = "";
+    if (e.examStart) {
+      answer = "Tap to start the exam";
+    }
     return InkWell(
       onTap: () {
-        joinexam();
+        if (e.examStart) {
+          joinexam(index);
+        }
       },
       child: Container(
-        width: 100,
-        height: 40,
+        margin: EdgeInsets.all(10),
+        padding: EdgeInsets.all(5),
         decoration: BoxDecoration(
-          color: Colors.teal,
-          borderRadius: BorderRadius.circular(30.0),
+          color: Colors.white,
+          shape: BoxShape.circle,
           boxShadow: [
-            //BoxShadow(color: Colors.grey, offset: Offset(1, 2)),
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: Offset(0, 3), // changes position of shadow
+            ),
           ],
         ),
-        child: Row(
+        //height: 100.0,
+        //height: 300.0,
+        width: 220,
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          // crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'Start',
-              style: TextStyle(
-                  color: Colors.white, fontSize: 15.0, fontFamily: 'Merienda'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Expanded(
+                    child: Text(
+                  e.examName,
+                  maxLines: 4,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ))
+              ],
             ),
-            SizedBox(
-              width: 0.0,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  teacher,
+                  maxLines: 4,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.justify,
+                  style: TextStyle(fontSize: 18, fontStyle: FontStyle.italic),
+                )
+              ],
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget OngoingExam(int index, String examname, String teacher) {
-    EdgeInsets padding = index == 0
-        ? const EdgeInsets.only(left: 20.0, right: 10.0, top: 4.0, bottom: 30.0)
-        : const EdgeInsets.only(
-            left: 10.0, right: 10.0, top: 4.0, bottom: 30.0);
-    teacher = "conducted by " + teacher;
-    return new Padding(
-      padding: padding,
-      child: new InkWell(
-        onTap: () {
-          print('Card selected');
-        },
-        child: new Container(
-          padding: EdgeInsets.only(bottom: 10, top: 10),
-          decoration: new BoxDecoration(
-            borderRadius: new BorderRadius.circular(10.0),
-            color: Colors.blueGrey,
-            boxShadow: [
-              new BoxShadow(
-                  color: Colors.black.withAlpha(70),
-                  offset: const Offset(3.0, 10.0),
-                  blurRadius: 15.0)
-            ],
-          ),
-          //height: 100.0,
-          width: 200.0,
-          child: new Stack(
-            children: <Widget>[
-              Center(
-                child: Column(
-                  //mainAxisAlignment: MainAxisAlignment.center,
-                  //crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      examname,
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20.0,
-                          fontFamily: 'Merienda'),
-                    ),
-                    //SizedBox(height: 5,),
-                    Text(
-                      teacher,
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15.0,
-                          fontFamily: 'Merienda'),
-                    ),
-                    Text(
-                      "09/12/2020",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15.0,
-                          fontFamily: 'Merienda'),
-                    ),
-                    Text(
-                      "9.00 am - 12.00 pm",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15.0,
-                          fontFamily: 'Merienda'),
-                    ),
-                    //Divider(),
-                  ],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  "Subject: ",
+                  style: TextStyle(
+                    fontSize: 15,
+                  ),
                 ),
-              ),
-              new Align(
-                alignment: Alignment.bottomCenter,
-                child: startbutton(),
-              ),
-            ],
-          ),
+                Text(
+                  e.examSubject,
+                  style: TextStyle(
+                    fontSize: 15,
+                  ),
+                )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  "Time: ",
+                  style: TextStyle(
+                    fontSize: 15,
+                  ),
+                ),
+                Text(
+                  formattedDate,
+                  style: TextStyle(
+                    fontSize: 15,
+                  ),
+                )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  answer,
+                  maxLines: 4,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.justify,
+                ),
+              ],
+            ),
+            //Divider(),
+          ],
+
+//              new Align(
+//                alignment: Alignment.bottomCenter,
+//                child: startbutton(),
+//              ),
         ),
       ),
     );
   }
 
-  Widget previousexam(int index, String examname, String teacher, bool ans) {
+  Widget previousexam(int index, Exam e) {
     String answer = "";
-    teacher = "conducted by " + teacher;
+    String teacher = "conducted by " + e.examCreator;
+    var date = new DateTime.fromMicrosecondsSinceEpoch(e.examTime);
+    var formattedDate = DateFormat.yMd().add_jm().format(date);
 
-    if (index % 3 == 0) {
+    if (e.examAnswerAvailable) {
       answer =
           "Answer Script is available of this exam. Tap to see the answer script";
     }
-    return new ListTile(
-      onTap: () {
-        print("tapped");
-        if (index % 3 == 0) {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (BuildContext context) {
-                return AnswerPage([]);
-              },
+    return InkWell(
+        onTap: () {
+      if (e.examAnswerAvailable) {
+        showAnswer(index);
+      }
+    },
+    child:Container(
+        margin: EdgeInsets.all(10),
+        padding: EdgeInsets.all(10),
+        height: 150,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: Offset(0, 3), // changes position of shadow
             ),
-          );
-        }
-      },
-      title: new Column(
-        children: <Widget>[
-          new Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              new Container(
-                height: 72.0,
-                width: 72.0,
-                decoration: new BoxDecoration(
-                  color: Colors.lightGreen,
-                  boxShadow: [
-                    new BoxShadow(
-                        color: Colors.black.withAlpha(70),
-                        offset: const Offset(2.0, 2.0),
-                        blurRadius: 2.0)
+          ],
+        ),
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              flex: 4,
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Expanded(
+                          child: Text(
+                        e.examName,
+                        maxLines: 4,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ))
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        teacher,
+                        style: TextStyle(
+                            fontSize: 18, fontStyle: FontStyle.italic),
+                      )
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "Subject: ",
+                        style: TextStyle(
+                          fontSize: 15,
+                        ),
+                      ),
+                      Text(
+                        e.examSubject,
+                        style: TextStyle(
+                          fontSize: 15,
+                        ),
+                      )
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "Time: ",
+                        style: TextStyle(
+                          fontSize: 15,
+                        ),
+                      ),
+                      Text(
+                        formattedDate,
+                        style: TextStyle(
+                          fontSize: 15,
+                        ),
+                      )
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Expanded(
+                        child: Text(
+                          answer,
+                          maxLines: 4,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.justify,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: VerticalDivider(
+                thickness: 2,
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Container(
+                height: 70,
+                //margin: EdgeInsets.all(100.0),
+                decoration:
+                    BoxDecoration(color: Colors.teal, shape: BoxShape.circle),
+
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      e.examMarks.toString(),
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      "marks",
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    )
                   ],
-                  borderRadius: new BorderRadius.all(new Radius.circular(12.0)),
                 ),
               ),
-              new SizedBox(
-                width: 8.0,
-              ),
-              new Expanded(
-                  child: new Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  new Text(
-                    examname,
-                    style: new TextStyle(
-                        fontSize: 14.0,
-                        color: Colors.black87,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  new Text(
-                    teacher,
-                    style: new TextStyle(
-                        fontSize: 12.0,
-                        color: Colors.black54,
-                        fontWeight: FontWeight.normal),
-                  ),
-                  new Text(
-                    "Exam time: 10/5/2020, 3.00 pm- 5.00 pm",
-                    style: new TextStyle(
-                        fontSize: 12.0,
-                        color: Colors.black54,
-                        fontWeight: FontWeight.normal),
-                  ),
-                  new Text(
-                    answer,
-                    style: new TextStyle(
-                        fontSize: 12.0,
-                        color: Colors.black54,
-                        fontWeight: FontWeight.normal),
-                  )
-                ],
-              )),
-            ],
-          ),
-          new Divider(),
-        ],
-      ),
-    );
+            )
+          ],
+        )));
   }
 
   @override
@@ -234,10 +318,10 @@ class _CalenderState extends State<Calender> {
 
     final headerList = new ListView.builder(
       itemBuilder: (context, index) {
-        return OngoingExam(index, "Physics", "Prottoy");
+        return OngoingExam(index + 1, currentExams[index]);
       },
       scrollDirection: Axis.horizontal,
-      itemCount: items.length,
+      itemCount: currentExams.length,
     );
 
     return new Container(
@@ -265,7 +349,7 @@ class _CalenderState extends State<Calender> {
                 Divider(
                   thickness: 2,
                 ),
-                new Container(height: 200.0, width: _width, child: headerList),
+                new Container(height: 240.0, width: _width, child: headerList),
                 new Text(
                   'Previous Exams',
                   style: new TextStyle(
@@ -277,9 +361,11 @@ class _CalenderState extends State<Calender> {
                   thickness: 2,
                 ),
                 new Expanded(
-                    child: ListView.builder(itemBuilder: (context, index) {
-                  return previousexam(index, "Chemistry-01", "Sakhawat", true);
-                }))
+                    child: ListView.builder(
+                        itemCount: previousExam.length,
+                        itemBuilder: (context, index) {
+                          return previousexam(index + 1, previousExam[index]);
+                        }))
               ],
             ),
           ),

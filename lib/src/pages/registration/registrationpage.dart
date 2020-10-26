@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:onlineexamplatform/src/apicalls/classroomapi.dart';
 import 'package:onlineexamplatform/src/models/classrooms.dart';
+import 'package:onlineexamplatform/src/models/exams.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:onlineexamplatform/src/pages/home/studenthome.dart';
 
@@ -21,14 +22,33 @@ class _RegisterFormState extends State<RegisterForm> {
     sp.setString("mobile", mobile);
   }
 
-  void login()async {
+  void login() async {
     saveAuthData(true, mobileNumber);
-    ClassroomApi classroomApi= new ClassroomApi();
-    List<Classroom> classrooms=  await classroomApi.getClassrooms("userid");
+    ClassroomApi classroomApi = new ClassroomApi();
+    List<Classroom> classrooms = await classroomApi.getClassrooms("userid");
+    var exams = await classroomApi.getClassroomExams("asdsad");
+//    if(res!=null){
+    //var exams = jsonDecode(res);
+    List<Exam> currentExams = new List();
+    for (var e in exams['currentExam']) {
+      Exam er = new Exam(e["_id"], e["examName"], e["examInstruction"],
+          e["examSubject"], e["examCreator"], e["examTime"], e["examMarks"]);
+      er.examStart = e["examStart"];
+      er.examDuration = e["examDuration"];
+      currentExams.add(er);
+    }
+    List<Exam> previousExams = new List();
+    for (var e in exams['previousExam']) {
+      Exam er = new Exam(e["_id"], e["examName"], e["examInstruction"],
+          e["examSubject"], e["examCreator"], e["examTime"], e["examMarks"]);
+      er.examAnswerAvailable = e["examAnswerAvailable"];
+      er.examDuration = e["examDuration"];
+      previousExams.add(er);
+    }
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (BuildContext context) {
-          return StudentHome(classrooms);
+          return StudentHome(classrooms, currentExams, previousExams);
         },
       ),
     );

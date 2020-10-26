@@ -1,33 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:onlineexamplatform/src/models/exams.dart';
 
 // ignore: must_be_immutable
 class AnswerPage extends StatefulWidget {
-  List<String> answers;
-  AnswerPage(this.answers);
+  Exam e;
+  AnswerPage(this.e);
   @override
-  _AnswerPageState createState() => _AnswerPageState(answers);
+  _AnswerPageState createState() => _AnswerPageState(e);
 }
 
 class _AnswerPageState extends State<AnswerPage> {
-  List<String> answers;
-  _AnswerPageState(this.answers);
-  var exam = [
-    {"type": 'Q/A', "question": "What is your name?"},
-    {"type": 'Explain', "question": "Explain the exam?"},
-    {"type": 'Y/N', "question": "Are you a man?"},
-    {"type": 'T/F', "question": "You are a man"},
-    {"type": 'gap', "question": "I am a _______"},
-    {
-      "type": 'MCQ',
-      "question": "2+2 = ?",
-      "options": ["1", "2", "3", "4"]
-    },
-    {
-      "type": 'Multipleanswer',
-      "question": "2+2 = ?",
-      "options": ["1", "2", "3", "4"]
-    }
-  ];
+  Exam e;
+  _AnswerPageState(this.e);
   Widget questionanswer(String question, String answer) {
     return Card(
       child: Container(
@@ -38,17 +22,7 @@ class _AnswerPageState extends State<AnswerPage> {
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
                     color: Colors.orange)),
-            Text("Your Answer ",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                    color: Colors.blue)),
-            Text(answer,
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                    color: Colors.blue)),
-            Text("Correct Answer ",
+            Text("Answer ",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 15,
@@ -67,8 +41,8 @@ class _AnswerPageState extends State<AnswerPage> {
   @override
   Widget build(BuildContext context) {
     List<Widget> widgets = [];
-    for (int i = 0; i < exam.length; i++) {
-      widgets.add(questionanswer(exam[i]['question'], ""));
+    for (int i = 0; i < e.examQuestions.length; i++) {
+      widgets.add(questionanswer(e.examQuestions[i].question, e.examQuestions[i].answer));
       widgets.add(SizedBox(
         height: 10,
       ));

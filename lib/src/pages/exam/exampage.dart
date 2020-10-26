@@ -1,40 +1,33 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:onlineexamplatform/src/apicalls/examapi.dart';
+import 'package:onlineexamplatform/src/models/answerscript.dart';
+import 'package:onlineexamplatform/src/models/exams.dart';
 import 'package:onlineexamplatform/src/pages/exam/resultpage.dart';
 
 import 'package:onlineexamplatform/src/pages/exam/timer.dart';
 
 class ExamPage extends StatefulWidget {
+  Exam e;
+  AnswerScript answerScript;
+  ExamPage(this.e,this.answerScript);
   @override
-  _ExamState createState() => _ExamState();
+  _ExamState createState() => _ExamState(e,answerScript);
 }
 
 class _ExamState extends State<ExamPage> {
+  Exam e;
+  AnswerScript answerScript;
+  _ExamState(this.e,this.answerScript);
   int examnumber = 0;
-  var exam = [
-    {"type": 'Q/A', "question": "What is your name?"},
-    {"type": 'Explain', "question": "Explain the exam?"},
-    {"type": 'Y/N', "question": "Are you a man?"},
-    {"type": 'T/F', "question": "You are a man"},
-    {"type": 'gap', "question": "I am a _______"},
-    {
-      "type": 'MCQ',
-      "question": "2+2 = ?",
-      "options": ["1", "2", "3", "4"]
-    },
-    {
-      "type": 'Multipleanswer',
-      "question": "2+2 = ?",
-      "options": ["1", "2", "3", "4"]
-    }
-  ];
-  List<String> answers = new List(10);
   @override
   void initState() {
     setState(() {
-      for (int i = 0; i < 10; i++) {
+      for (int i = 0; i < e.examQuestions.length; i++) {
         te[i] = new TextEditingController();
-        answers[i] = "Not Answered";
+        answerScript.examScript[i].answer = "Not Answered";
       }
     });
   }
@@ -46,14 +39,14 @@ class _ExamState extends State<ExamPage> {
       widgets.add(
         RadioListTile(
           value: option,
-          groupValue: answers[index],
+          groupValue: answerScript.examScript[index].answer,
           title: Text(option),
           onChanged: (value) {
             setState(() {
-              answers[index] = value;
+              answerScript.examScript[index].answer = value;
             });
           },
-          selected: answers[index] == option,
+          selected: answerScript.examScript[index].answer == option,
           activeColor: Colors.green,
         ),
       );
@@ -129,26 +122,26 @@ class _ExamState extends State<ExamPage> {
             children: <Widget>[
               RadioListTile(
                 value: "Yes",
-                groupValue: answers[index],
+                groupValue:answerScript.examScript[index].answer,
                 title: Text("Yes"),
                 onChanged: (value) {
                   setState(() {
-                    answers[index] = value;
+                    answerScript.examScript[index].answer = value;
                   });
                 },
-                selected: answers[index] == "Yes",
+                selected:answerScript.examScript[index].answer == "Yes",
                 activeColor: Colors.green,
               ),
               RadioListTile(
                 value: "No",
-                groupValue: answers[index],
+                groupValue: answerScript.examScript[index].answer,
                 title: Text("No"),
                 onChanged: (value) {
                   setState(() {
-                    answers[index] = value;
+                    answerScript.examScript[index].answer = value;
                   });
                 },
-                selected: answers[index] == "No",
+                selected: answerScript.examScript[index].answer == "No",
                 activeColor: Colors.green,
               ),
             ],
@@ -171,26 +164,26 @@ class _ExamState extends State<ExamPage> {
             children: <Widget>[
               RadioListTile(
                 value: "True",
-                groupValue: answers[index],
+                groupValue: answerScript.examScript[index].answer,
                 title: Text("True"),
                 onChanged: (value) {
                   setState(() {
-                    answers[index] = value;
+                    answerScript.examScript[index].answer = value;
                   });
                 },
-                selected: answers[index] == "True",
+                selected:answerScript.examScript[index].answer == "True",
                 activeColor: Colors.green,
               ),
               RadioListTile(
                 value: "False",
-                groupValue: answers[index],
+                groupValue: answerScript.examScript[index].answer,
                 title: Text("False"),
                 onChanged: (value) {
                   setState(() {
-                    answers[index] = value;
+                    answerScript.examScript[index].answer= value;
                   });
                 },
-                selected: answers[index] == "False",
+                selected: answerScript.examScript[index].answer == "False",
                 activeColor: Colors.green,
               ),
             ],
@@ -206,30 +199,30 @@ class _ExamState extends State<ExamPage> {
       widgets.add(
         CheckboxListTile(
           controlAffinity: ListTileControlAffinity.leading,
-          value: answers[index] != null &&
-              answers[index].split(",").contains(option),
+          value: answerScript.examScript[index].answer != null &&
+              answerScript.examScript[index].answer.split(",").contains(option),
           title: Text(option),
           onChanged: (value) {
             setState(() {
               if (value) {
-                if (answers[index] == null) {
-                  answers[index] = option;
+                if (answerScript.examScript[index].answer == null|| answerScript.examScript[index].answer=="Not Answered") {
+                  answerScript.examScript[index].answer = option;
                 } else {
-                  answers[index] = answers[index] + "," + option;
+                  answerScript.examScript[index].answer =answerScript.examScript[index].answer + "," + option;
                 }
               } else {
-                var str = answers[index].split(",");
+                var str = answerScript.examScript[index].answer.split(",");
                 if (str.contains(option)) {
                   str.remove(option);
                 }
-                answers[index] = str[0];
+                answerScript.examScript[index].answer = str[0];
                 for (int i = 1; i < str.length; i++) {
-                  answers[index] = answers[index] + "," + str[i];
+                  answerScript.examScript[index].answer= answerScript.examScript[index].answer + "," + str[i];
                 }
               }
             });
           },
-          selected: answers[index] == option,
+          selected:answerScript.examScript[index].answer == option,
           activeColor: Colors.green,
         ),
       );
@@ -251,47 +244,40 @@ class _ExamState extends State<ExamPage> {
   }
 
   Widget getExamWidget(int i) {
-    if (exam[i]['type'] == "MCQ") {
-      return MCQ(exam[i]["question"], exam[i]["options"], i);
-    } else if (exam[i]['type'] == 'Multipleanswer') {
-      return Multipleanswer(exam[i]["question"], exam[i]["options"], i);
-    } else if (exam[i]['type'] == 'gap' ||
-        exam[i]['type'] == 'Explain' ||
-        exam[i]['type'] == 'Q/A') {
-      return Gap(exam[i]["question"], i);
-    } else if (exam[i]['type'] == 'T/F') {
-      return TrueFalse(exam[i]["question"], i);
-    } else if (exam[i]['type'] == 'Y/N') {
-      return YesNo(exam[i]["question"], i);
+    if (e.examQuestions[i].questionType == "MCQ") {
+      return MCQ(e.examQuestions[i].question, e.examQuestions[i].options, i);
+    } else if (e.examQuestions[i].questionType == 'Multipleanswer') {
+      return Multipleanswer(
+          e.examQuestions[i].question, e.examQuestions[i].options, i);
+    } else if (e.examQuestions[i].questionType == 'gap' ||
+        e.examQuestions[i].questionType == 'Explain' ||
+        e.examQuestions[i].questionType == 'Q/A') {
+      return Gap(e.examQuestions[i].question, i);
+    } else if (e.examQuestions[i].questionType == 'T/F') {
+      return TrueFalse(e.examQuestions[i].question, i);
+    } else if (e.examQuestions[i].questionType == 'Y/N') {
+      return YesNo(e.examQuestions[i].question, i);
     }
   }
 
   Widget buttons() {
     return Container(
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           Visibility(
             visible: examnumber > 0,
             child: prevbutton(),
           ),
-          SizedBox(
-            width: 10,
-          ),
           Visibility(
-            visible: examnumber == (exam.length - 1),
+            visible: examnumber == (e.examQuestions.length - 1),
             child: submitbutton(),
           ),
-          SizedBox(
-            width: 10,
-          ),
           Visibility(
-            visible:
-                examnumber < exam.length && examnumber != (exam.length - 1),
+            visible: (examnumber < e.examQuestions.length &&
+                examnumber != e.examQuestions.length - 1),
             child: nextbutton(),
           ),
-          SizedBox(
-            width: 10,
-          )
         ],
       ),
     );
@@ -301,10 +287,10 @@ class _ExamState extends State<ExamPage> {
     return InkWell(
       onTap: () {
         setState(() {
-          if (exam[examnumber]['type'] == 'gap' ||
-              exam[examnumber]['type'] == 'Explain' ||
-              exam[examnumber]['type'] == 'Q/A') {
-            answers[examnumber] = te[examnumber].text;
+          if (e.examQuestions[examnumber].questionType == 'gap' ||
+              e.examQuestions[examnumber].questionType == 'Explain' ||
+              e.examQuestions[examnumber].questionType == 'Q/A') {
+            answerScript.examScript[examnumber].answer = te[examnumber].text;
           }
           examnumber++;
         });
@@ -342,10 +328,10 @@ class _ExamState extends State<ExamPage> {
     return InkWell(
       onTap: () {
         setState(() {
-          if (exam[examnumber]['type'] == 'gap' ||
-              exam[examnumber]['type'] == 'Explain' ||
-              exam[examnumber]['type'] == 'Q/A') {
-            answers[examnumber] = te[examnumber].text;
+          if (e.examQuestions[examnumber].questionType == 'gap' ||
+              e.examQuestions[examnumber].questionType == 'Explain' ||
+              e.examQuestions[examnumber].questionType == 'Q/A') {
+            answerScript.examScript[examnumber].answer = te[examnumber].text;
           }
           examnumber--;
         });
@@ -378,14 +364,19 @@ class _ExamState extends State<ExamPage> {
     );
   }
 
-  void result() {
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (BuildContext context) {
-          return ResultPage(answers);
-        },
-      ),
-    );
+  void result() async {
+    ExamApi examApi = new ExamApi();
+    bool success= await examApi.submitAnswerscript(answerScript);
+    print(success);
+    if(success) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (BuildContext context) {
+            return ResultPage();
+          },
+        ),
+      );
+    }
   }
 
   @override
@@ -404,7 +395,7 @@ class _ExamState extends State<ExamPage> {
                 //width: 100.0,
                 padding: EdgeInsets.only(top: 3.0, right: 4.0),
                 child: CountDownTimer(
-                  secondsRemaining: 30,
+                  secondsRemaining: e.examDuration,
                   whenTimeExpires: result,
                   countDownTimerStyle: TextStyle(
                       color: Color(0XFFf5a623), fontSize: 17.0, height: 1.2),
